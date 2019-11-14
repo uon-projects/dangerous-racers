@@ -164,97 +164,98 @@ int offsetX=0,offsetY=0;
 void showGameScreen() {
 bool Up=false,Right=false,Down=false,Left=false;
 
-		if (Keyboard::isKeyPressed(Keyboard::Up)) Up=true;
-		if (Keyboard::isKeyPressed(Keyboard::Right)) Right=true;
-		if (Keyboard::isKeyPressed(Keyboard::Down)) Down=true;
-		if (Keyboard::isKeyPressed(Keyboard::Left)) Left=true;
-	float acc, dec;
-	dec = 0.2;
-	acc = 0.2;
-			srand(time(NULL));
-			if (Up && speed<maxSpeed + rand()%2 + 0.6)
-				if (speed < 0)  speed += dec;
-				else  speed += acc + rand()%3/10;
-				
-			if (Down && speed>-maxSpeed)
-				if (speed > 0) speed -= dec * 2;
-				else  speed -= acc;
+	if (Keyboard::isKeyPressed(Keyboard::Up)) Up=true;
+	if (Keyboard::isKeyPressed(Keyboard::Right)) Right=true;
+	if (Keyboard::isKeyPressed(Keyboard::Down)) Down=true;
+	if (Keyboard::isKeyPressed(Keyboard::Left)) Left=true;
 
-			if (!Up && !Down)
-				if (speed - dec > 0) speed -= dec;
-				else if (speed + dec < 0) speed += dec;
-				else speed = 0;
-
-			if (Right && speed!=0)  angle += turnSpeed * speed/maxSpeed;
-			if (Left && speed!=0)   angle -= turnSpeed * speed/maxSpeed;
-
-			car[userCar].speed = speed;
-			car[userCar].angle = angle;
-			
-			car[userCar].move();
-			for(int i=0;i<carsPerLvl;i++) {
-				if(i != userCar) {
-					car[i].move();
-				}
-			}
-			
-			for(int i=0;i<carsPerLvl;i++){
-				if(i != userCar) {
-					car[i].findTarget();
-				}
-			}
-
-			srand(time(NULL));
-			for(int i=0;i<carsPerLvl;i++)
-				for(int j=0;j<carsPerLvl;j++) {
-					int dx=0, dy=0;
-					if (PixelPerfectDetection(car[i].sCar, car[j].sCar) && i != j) {
-						dx = car[i].x-car[j].x;
-						dy = car[i].y-car[j].y;
-						if(car[i].speed != 0) {
-							car[i].x+=dx*car[i].speed/50.0;
-							car[i].y+=dy*car[i].speed/50.0;
-						}
-					}
-				}
-
-			for(int i=0; i<2; i++) {
-				int dx=0, dy=0;
-				if (PixelPerfectDetection(car[userCar].sCar, trackObjects[i].sprite)) {
-					dx = car[userCar].x-trackObjects[i].x;
-					dy = car[userCar].y-trackObjects[i].y;
-					if(car[userCar].speed != 0) {
-						car[userCar].x+=dx*car[userCar].speed/50.0;
-						car[userCar].y+=dy*car[userCar].speed/50.0;
-					}
-
-				}
-			}
-
-			for(int i=0; i<carsPerLvl; i++) {
-				if(i != userCar && car[i].speed < maxSpeed + carsPerLvl - i) {
-					car[i].speed += acc;
-				}
-			}
+	float acc = 0.2, dec = 0.2;
 	
-			if (car[userCar].x>320 && car[userCar].x<1330) offsetX = car[userCar].x-320;
-			if (car[userCar].y>240 && car[userCar].y<2928) offsetY = car[userCar].y-240;
+	srand(time(NULL));
+	
+	if (Up && speed<maxSpeed + rand()%2 + 0.6)
+		if (speed < 0)  speed += dec;
+		else  speed += acc + rand()%3/10;
+				
+	if (Down && speed>-maxSpeed)
+		if (speed > 0) speed -= dec * 2;
+		else  speed -= acc;
 
-			tracksBackground[raceLvl - 1].backgroundTrack.setPosition(-offsetX,-offsetY);
-			window.draw(tracksBackground[raceLvl - 1].backgroundTrack);
+	if (!Up && !Down)
+		if (speed - dec > 0) speed -= dec;
+		else if (speed + dec < 0) speed += dec;
+		else speed = 0;
 
-			for(int i=0;i<carsPerLvl;i++)
-			{
-				car[i].sCar.setPosition(car[i].x-offsetX,car[i].y-offsetY);
-				car[i].sCar.setRotation(car[i].angle*180/pi);
-				window.draw(car[i].sCar);
+	if (Right && speed!=0)  angle += turnSpeed * speed/maxSpeed;
+		if (Left && speed!=0)   angle -= turnSpeed * speed/maxSpeed;
+
+	car[userCar].speed = speed;
+	car[userCar].angle = angle;
+			
+	car[userCar].move();
+	for(int i=0;i<carsPerLvl;i++) {
+		if(i != userCar) {
+			car[i].move();
+		}
+	}
+			
+	for(int i=0;i<carsPerLvl;i++){
+		if(i != userCar) {
+			car[i].findTarget();
+		}
+	}
+
+	srand(time(NULL));
+	for(int i=0;i<carsPerLvl;i++)
+		for(int j=0;j<carsPerLvl;j++) {
+			int dx=0, dy=0;
+			if (PixelPerfectDetection(car[i].sCar, car[j].sCar) && i != j) {
+				dx = car[i].x-car[j].x;
+				dy = car[i].y-car[j].y;
+				if(car[i].speed != 0) {
+					car[i].x+=dx*car[i].speed/50.0;
+					car[i].y+=dy*car[i].speed/50.0;
+				}
 			}
-			for(int i=0; i<2; i++) 
-			{
-				trackObjects[i].sprite.setPosition(trackObjects[i].x-offsetX,trackObjects[i].y-offsetY);
-				trackObjects[i].sprite.setRotation(trackObjects[i].angle*180/pi);
-				window.draw(trackObjects[i].sprite);
+		}
+
+	for(int i=0; i<2; i++) {
+		int dx=0, dy=0;
+		if (PixelPerfectDetection(car[userCar].sCar, trackObjects[i].sprite)) {
+			dx = car[userCar].x-trackObjects[i].x;
+			dy = car[userCar].y-trackObjects[i].y;
+			if(car[userCar].speed != 0) {
+				car[userCar].x+=dx*car[userCar].speed/50.0;
+				car[userCar].y+=dy*car[userCar].speed/50.0;
 			}
+		}
+	}
+
+	for(int i=0; i<carsPerLvl; i++) {
+		if(i != userCar && car[i].speed < maxSpeed + carsPerLvl - i) {
+			car[i].speed += acc;
+		}
+	}
+	
+	if (car[userCar].x>320 && car[userCar].x<1330) offsetX = car[userCar].x-320;
+	if (car[userCar].y>240 && car[userCar].y<2928) offsetY = car[userCar].y-240;
+
+	tracksBackground[raceLvl - 1].backgroundTrack.setPosition(-offsetX,-offsetY);
+	window.draw(tracksBackground[raceLvl - 1].backgroundTrack);
+
+	for(int i=0;i<carsPerLvl;i++)
+	{
+		car[i].sCar.setPosition(car[i].x-offsetX,car[i].y-offsetY);
+		car[i].sCar.setRotation(car[i].angle*180/pi);
+		window.draw(car[i].sCar);
+	}
+	
+	for(int i=0; i<2; i++) 
+	{
+		trackObjects[i].sprite.setPosition(trackObjects[i].x-offsetX,trackObjects[i].y-offsetY);
+		trackObjects[i].sprite.setRotation(trackObjects[i].angle*180/pi);
+		window.draw(trackObjects[i].sprite);
+	}
 
 }
 
@@ -285,7 +286,7 @@ void initialiseGameData()
 		} else if(i<6) {
 			car[i].y=1920 + 400;
 		}
-		car[i].sCar = carModels[1].carSprite;
+		car[i].sCar = carModels[0].carSprite;
 		car[i].carId = i;
 	}
 	Sprite sAmbulance(zfSFML.loadSpriteFromTexture("Assets/", "ambulance", "png"));
