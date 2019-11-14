@@ -64,7 +64,13 @@ struct Car
 		angle=0;
 		n=0;
 		lap=0;
-		currentCheckPoint=0;
+		currentCheckPoint=6;
+	}
+
+	int place()
+	{
+		int carPlace = lap * 7 + currentCheckPoint;
+		return carPlace;
 	}
 	
 	void increaseSpeed()
@@ -173,7 +179,7 @@ bool Up=false,Right=false,Down=false,Left=false;
 	
 	srand(time(NULL));
 	
-	if (Up && speed<maxSpeed + rand()%2 + 0.6)
+	if (Up && speed<maxSpeed + rand()%2 + 1)
 		if (speed < 0)  speed += dec;
 		else  speed += acc + rand()%3/10;
 				
