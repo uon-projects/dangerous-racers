@@ -321,6 +321,11 @@ int main()
 	splashScreenBg.setSize(Vector2f(window.getSize().x, window.getSize().y));
 	Color color(16, 16, 16);
 	splashScreenBg.setFillColor(color);
+	
+	if(!initialise) {
+		initialise = true;
+		initialiseGameData();
+	}
 
     while (window.isOpen())
     {
@@ -341,10 +346,6 @@ int main()
 			clockState++;
 		}
 
-		if(!initialise) {
-			initialise = true;
-			initialiseGameData();
-		}
 		if (currentScreen == 0)
 		{
 			float sec = clock.getElapsedTime().asSeconds();
