@@ -157,7 +157,7 @@ struct CarModels
 	}
 };
 
-TracksBackground tracksBackground[2];
+TracksBackground tracksBackground[3];
 TrackObjects trackObjects[2];
 CarModels carModels[2];
 const int carsPerLvl = 4;
@@ -270,9 +270,15 @@ void initialiseGameData()
 	Sprite bg1 = zfSFML.loadSpriteFromTexture("Assets/", "track_1", "png");
 	bg1.setScale(1, 1);
 	tracksBackground[0].backgroundTrack = bg1;
+
 	Sprite bg2 = zfSFML.loadSpriteFromTexture("Assets/", "track_2", "png");
 	bg2.setScale(1, 1);
 	tracksBackground[1].backgroundTrack = bg2;
+
+	Sprite bg3 = zfSFML.loadSpriteFromTexture("Assets/", "track_3", "png");
+	bg3.setScale(1, 1);
+	tracksBackground[2].backgroundTrack = bg3;
+
 	Sprite sCar1(zfSFML.loadSpriteFromTexture("Assets/", "car1", "png"));
 	sCar1.setOrigin(61, 128);
 	sCar1.scale(0.7, 0.7);
