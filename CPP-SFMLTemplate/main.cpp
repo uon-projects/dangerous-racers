@@ -310,7 +310,6 @@ int main()
 {
 	window.setFramerateLimit(60);
 	
-	bool initialise = false;
 	Sprite zeoFlowSprite(zfSFML.loadSpriteFromTexture("Assets/", "zeoflow_logo", "png"));
 
 	int currentScreen = 0;
@@ -322,10 +321,7 @@ int main()
 	Color color(16, 16, 16);
 	splashScreenBg.setFillColor(color);
 	
-	if(!initialise) {
-		initialise = true;
-		initialiseGameData();
-	}
+	initialiseGameData();
 
     while (window.isOpen())
     {
