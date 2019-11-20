@@ -168,7 +168,7 @@ float maxSpeed=15;
 float turnSpeed=0.05;
 int offsetX=0,offsetY=0;
 void showGameScreen() {
-bool Up=false,Right=false,Down=false,Left=false;
+	bool Up=false,Right=false,Down=false,Left=false;
 
 	if (Keyboard::isKeyPressed(Keyboard::Up)) Up=true;
 	if (Keyboard::isKeyPressed(Keyboard::Right)) Right=true;
@@ -288,6 +288,11 @@ void initialiseGameData()
 	sCar2.scale(0.7, 0.7);
 	carModels[1].carSprite = sCar2;
 	userCar = 3;
+	if(raceLvl == 1) {
+
+	} else if(raceLvl == 2) {
+
+	}
     for(int i=0;i<carsPerLvl;i++)
 	{
 		car[i].x= 260 + i%2*135;
