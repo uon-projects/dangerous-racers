@@ -13,7 +13,7 @@ using namespace Collision;
 RenderWindow window(VideoMode(800, 500), "Dangerous Racing");
 ZeoFlow_SFML zfSFML;
 
-int raceLvl = 1;
+int raceLvl = 2;
 const float pi = 3.1415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170679;
 const int num=12; //checkpoints
 int points[num][2] = {
