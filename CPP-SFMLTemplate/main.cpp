@@ -321,6 +321,7 @@ int main()
 	int currentScreen = 0;
 	Clock clock;
 	int clockState = 0;
+	int teo = 0;
 	
 	RectangleShape splashScreenBg;
 	splashScreenBg.setSize(Vector2f(window.getSize().x, window.getSize().y));
