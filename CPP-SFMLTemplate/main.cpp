@@ -53,13 +53,13 @@ struct TrackObjects
 	}
 };
 
-struct Car
+struct Car12
 {
 	float x,y,speed,angle;
 	int carId, currentCheckPoint, lap, n;
 	Sprite sCar;
 	
-	Car() {
+	Car12() {
 		speed=0;
 		angle=0;
 		n=0;
