@@ -287,33 +287,45 @@ void initialiseGameData()
 	sCar2.setOrigin(128, 128);
 	sCar2.scale(0.7, 0.7);
 	carModels[1].carSprite = sCar2;
-	userCar = 3;
 	if(raceLvl == 1) {
-
-	} else if(raceLvl == 2) {
-
-	}
-    for(int i=0;i<carsPerLvl;i++)
-	{
-		car[i].x= 260 + i%2*135;
-		if(i<2) {
-			car[i].y=1920;
-		} else if(i<4) {
-			car[i].y=1920 + 200;
-		} else if(i<6) {
-			car[i].y=1920 + 400;
+		userCar = 3;
+		for(int i=0;i<carsPerLvl;i++)
+		{
+			car[i].x= 260 + i%2*135;
+			if(i<2) {
+				car[i].y=1920;
+			} else if(i<4) {
+				car[i].y=1920 + 200;
+			} else if(i<6) {
+				car[i].y=1920 + 400;
+			}
+			car[i].sCar = carModels[0].carSprite;
+			car[i].carId = i;
 		}
-		car[i].sCar = carModels[0].carSprite;
-		car[i].carId = i;
-	}
-	Sprite sAmbulance(zfSFML.loadSpriteFromTexture("Assets/", "ambulance", "png"));
-	sAmbulance.setOrigin(128, 128);
-	sAmbulance.scale(0.9, 0.9);
-	for(int i=0; i<2; i++) {
-		trackObjects[i].sprite = sAmbulance;
-		trackObjects[i].x = 640;
-		trackObjects[i].y = 1780 + i*120;
-		trackObjects[i].angle = 45;
+		Sprite sAmbulance(zfSFML.loadSpriteFromTexture("Assets/", "ambulance", "png"));
+		sAmbulance.setOrigin(128, 128);
+		sAmbulance.scale(0.9, 0.9);
+		for(int i=0; i<2; i++) {
+			trackObjects[i].sprite = sAmbulance;
+			trackObjects[i].x = 640;
+			trackObjects[i].y = 1780 + i*120;
+			trackObjects[i].angle = 45;
+		}
+	} else if(raceLvl == 2) {
+		userCar = 3;
+		for(int i=0;i<carsPerLvl;i++)
+		{
+			car[i].x= 260 + i%2*135;
+			if(i<2) {
+				car[i].y=1920;
+			} else if(i<4) {
+				car[i].y=1920 + 200;
+			} else if(i<6) {
+				car[i].y=1920 + 400;
+			}
+			car[i].sCar = carModels[0].carSprite;
+			car[i].carId = i;
+		}
 	}
 }
 
