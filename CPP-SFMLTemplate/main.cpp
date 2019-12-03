@@ -2,6 +2,7 @@
 #include <SFML/Graphics.hpp>
 #include <string>
 #include "ZeoFlow_SFML.h"
+#include "MD2.h"
 #include "Collision.hpp"
 
 //Compiler Directives
@@ -12,6 +13,12 @@ using namespace Collision;
 
 RenderWindow window(VideoMode(800, 500), "Dangerous Racing");
 ZeoFlow_SFML zfSFML;
+
+const int SCENE_SPLASH_SCREEN = 0;
+const int SCENE_GAME_MENU_SCREEN = 1;
+const int SCENE_GAME_SCREEN = 2;
+const int SCENE_OPTIONS_SCREEN = 3;
+const int SCENE_SELECT_LVL = 4;
 
 int raceLvl = 1;
 const float pi = 3.1415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170679;
@@ -162,6 +169,8 @@ TrackObjects trackObjects[2];
 CarModels carModels[2];
 const int carsPerLvl = 4;
 Car car[carsPerLvl];
+sf::Font font1(zfSFML.loadFont("Assets/fonts/", "big_space", "otf"));
+MD2 btnLvl;
 
 float speed=0,angle=0;
 float maxSpeed=15;
@@ -329,13 +338,38 @@ void initialiseGameData()
 	}
 }
 
+bool isLvlUnlocked(int level)
+{
+	return true;
+}
+
+void gameMenuScreen()
+{
+
+	sf::RectangleShape selectLvlBg;
+	selectLvlBg.setSize(sf::Vector2f(window.getSize().x, window.getSize().y));
+	selectLvlBg.setFillColor(sf::Color(43, 43, 43));
+	window.draw(selectLvlBg);
+	
+	btnLvl.setLocation(150, 200);
+	btnLvl.setUnlocked(isLvlUnlocked(1));
+	btnLvl.drawBtn(window, "LVL 1", 30, font1);
+	sf::Text btnTxt = btnLvl.drawBtnString("LVL 1", 30);
+	btnTxt.setFont(font1);
+	window.draw(btnTxt);
+	if(btnLvl.btnClicked(window)) {
+
+	}
+
+}
+
 int main()
 {
 	window.setFramerateLimit(60);
 	
 	Sprite zeoFlowSprite(zfSFML.loadSpriteFromTexture("Assets/", "zeoflow_logo", "png"));
 
-	int currentScreen = 0;
+	int currentScreen = SCENE_SPLASH_SCREEN;
 	Clock clock;
 	int clockState = 0;
 	
@@ -365,7 +399,7 @@ int main()
 			clockState++;
 		}
 
-		if (currentScreen == 0)
+		if (currentScreen == SCENE_SPLASH_SCREEN)
 		{
 			float sec = clock.getElapsedTime().asSeconds();
 			if (sec < 2.0)
@@ -378,9 +412,13 @@ int main()
 			else
 			{
 				clock.restart();
-				currentScreen = 1;
+				currentScreen = SCENE_GAME_MENU_SCREEN;
 			}
-		} else if(currentScreen == 1) {
+		} else if(currentScreen == SCENE_GAME_MENU_SCREEN) {
+
+			gameMenuScreen();
+
+		} else if(currentScreen == SCENE_GAME_SCREEN) {
 
 			showGameScreen();
 
