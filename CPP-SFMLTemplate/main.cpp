@@ -394,7 +394,24 @@ void gameSelectLvl()
 	selectLvlBg.setFillColor(sf::Color(43, 43, 43));
 	window.draw(selectLvlBg);
 	
-	sf::Text btnTxt;
+	sf::Text btnTxt, inGameExit;
+
+	inGameExit.setFont(font1);
+	inGameExit.setString("BACK");
+	inGameExit.setPosition(400, 100);
+	inGameExit.setCharacterSize(26);
+	sf::IntRect btnCharactersRect(inGameExit.getPosition().x - inGameExit.getGlobalBounds().width / 2,
+		inGameExit.getPosition().y, inGameExit.getGlobalBounds().width, inGameExit.getGlobalBounds().height * 2);
+	if (btnCharactersRect.contains(sf::Mouse::getPosition(window))) {
+		if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+			currentScreen = SCENE_GAME_MENU_SCREEN;
+		}
+		inGameExit.setFillColor(sf::Color(255, 255, 255));
+	} else {
+		inGameExit.setFillColor(sf::Color(198, 198, 198));
+	}
+	inGameExit.setOrigin(inGameExit.getGlobalBounds().width/2, 0);
+	window.draw(inGameExit);
 
 	btnLvl.setLocation(window.getSize().x/2 - 150, window.getSize().y/2 - 100);
 	btnLvl.setUnlocked(true);
