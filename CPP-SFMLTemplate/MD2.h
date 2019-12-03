@@ -79,8 +79,7 @@ namespace std
 		btnStringText.setString(title);
 		btnStringText.setPosition(x, y);
 		btnStringText.setCharacterSize(characterSize);
-		btnStringText.setFillColor(sf::Color::White);
-		btnStringText.setOrigin(btnStringText.getLocalBounds().width/2, btnStringText.getLocalBounds().height);
+		btnStringText.setFillColor(sf::Color::Transparent);
 
 		return btnStringText;
 
@@ -104,13 +103,13 @@ namespace std
 		btnL3.setOrigin(btnL3.getGlobalBounds().width/2, btnL3.getGlobalBounds().height/2);
 	
 		if(unlocked) {
-			btnL1.setFillColor(sf::Color(76,175,80));
-			btnL2.setFillColor(sf::Color(27,94,32));
-			btnL3.setFillColor(sf::Color(27,94,32));
+			btnL1.setFillColor(sf::Color(3,169,244));
+			btnL2.setFillColor(sf::Color(2,119,189));
+			btnL3.setFillColor(sf::Color(2,119,189));
 		} else {
-			btnL1.setFillColor(sf::Color(96,125,139));
-			btnL2.setFillColor(sf::Color(69,90,100));
-			btnL3.setFillColor(sf::Color(69,90,100));
+			btnL1.setFillColor(sf::Color(244,67,54));
+			btnL2.setFillColor(sf::Color(198,40,40));
+			btnL3.setFillColor(sf::Color(198,40,40));
 		}
 		
 		btnL1.setPosition(x, y);

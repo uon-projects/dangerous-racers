@@ -20,6 +20,7 @@ const int SCENE_GAME_SCREEN = 2;
 const int SCENE_OPTIONS_SCREEN = 3;
 const int SCENE_SELECT_LVL = 4;
 
+int currentScreen = SCENE_SPLASH_SCREEN;
 int raceLvl = 1;
 const float pi = 3.1415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170679;
 const int num=12; //checkpoints
@@ -351,16 +352,79 @@ void gameMenuScreen()
 	selectLvlBg.setFillColor(sf::Color(43, 43, 43));
 	window.draw(selectLvlBg);
 	
-	btnLvl.setLocation(150, 200);
-	btnLvl.setUnlocked(isLvlUnlocked(1));
-	btnLvl.drawBtn(window, "LVL 1", 30, font1);
-	sf::Text btnTxt = btnLvl.drawBtnString("LVL 1", 30);
+	sf::Text btnTxt;
+
+	btnLvl.setLocation(window.getSize().x/2, window.getSize().y/2 - 100);
+	btnLvl.setUnlocked(true);
+	btnTxt = btnLvl.drawBtnString("PLAY", 30);
 	btnTxt.setFont(font1);
 	window.draw(btnTxt);
+	btnLvl.drawBtn(window, "PLAY", 30, font1);
+	if(btnLvl.btnClicked(window)) {
+		currentScreen = SCENE_SELECT_LVL;
+	}
+
+	btnLvl.setLocation(window.getSize().x/2, window.getSize().y/2);
+	btnLvl.setUnlocked(true);
+	btnTxt = btnLvl.drawBtnString("SELECT CAR", 30);
+	btnTxt.setFont(font1);
+	window.draw(btnTxt);
+	btnLvl.drawBtn(window, "SELECT CAR", 30, font1);
 	if(btnLvl.btnClicked(window)) {
 
 	}
 
+	btnLvl.setLocation(window.getSize().x/2, window.getSize().y/2 + 100);
+	btnLvl.setUnlocked(true);
+	btnTxt = btnLvl.drawBtnString("HOW TO PLAY", 30);
+	btnTxt.setFont(font1);
+	window.draw(btnTxt);
+	btnLvl.drawBtn(window, "HOW TO PLAY", 30, font1);
+	if(btnLvl.btnClicked(window)) {
+
+	}
+
+}
+
+void gameSelectLvl()
+{
+
+	sf::RectangleShape selectLvlBg;
+	selectLvlBg.setSize(sf::Vector2f(window.getSize().x, window.getSize().y));
+	selectLvlBg.setFillColor(sf::Color(43, 43, 43));
+	window.draw(selectLvlBg);
+	
+	sf::Text btnTxt;
+
+	btnLvl.setLocation(window.getSize().x/2 - 150, window.getSize().y/2 - 100);
+	btnLvl.setUnlocked(true);
+	btnTxt = btnLvl.drawBtnString("LVL 1", 30);
+	btnTxt.setFont(font1);
+	window.draw(btnTxt);
+	btnLvl.drawBtn(window, "LVL 1", 30, font1);
+	if(btnLvl.btnClicked(window)) {
+		currentScreen = SCENE_SELECT_LVL;
+	}
+
+	btnLvl.setLocation(window.getSize().x/2, window.getSize().y/2);
+	btnLvl.setUnlocked(false);
+	btnTxt = btnLvl.drawBtnString("LVL 2", 30);
+	btnTxt.setFont(font1);
+	window.draw(btnTxt);
+	btnLvl.drawBtn(window, "LVL 2", 30, font1);
+	if(btnLvl.btnClicked(window)) {
+
+	}
+
+	btnLvl.setLocation(window.getSize().x/2 + 150, window.getSize().y/2 + 100);
+	btnLvl.setUnlocked(false);
+	btnTxt = btnLvl.drawBtnString("LVL 3", 30);
+	btnTxt.setFont(font1);
+	window.draw(btnTxt);
+	btnLvl.drawBtn(window, "LVL 3", 30, font1);
+	if(btnLvl.btnClicked(window)) {
+
+	}
 }
 
 int main()
@@ -369,7 +433,6 @@ int main()
 	
 	Sprite zeoFlowSprite(zfSFML.loadSpriteFromTexture("Assets/", "zeoflow_logo", "png"));
 
-	int currentScreen = SCENE_SPLASH_SCREEN;
 	Clock clock;
 	int clockState = 0;
 	
@@ -421,6 +484,10 @@ int main()
 		} else if(currentScreen == SCENE_GAME_SCREEN) {
 
 			showGameScreen();
+
+		} else if(currentScreen == SCENE_SELECT_LVL) {
+
+			gameSelectLvl();
 
 		}
         window.display();
