@@ -391,14 +391,14 @@ void gameSelectLvl()
 
 	sf::RectangleShape selectLvlBg;
 	selectLvlBg.setSize(sf::Vector2f(window.getSize().x, window.getSize().y));
-	selectLvlBg.setFillColor(sf::Color(43, 43, 43));
+	selectLvlBg.setFillColor(sf::Color(255,167,38));
 	window.draw(selectLvlBg);
 	
 	sf::Text btnTxt, inGameExit;
 
 	inGameExit.setFont(font1);
 	inGameExit.setString("BACK");
-	inGameExit.setPosition(400, 100);
+	inGameExit.setPosition(window.getSize().x - 100, 50);
 	inGameExit.setCharacterSize(26);
 	sf::IntRect btnCharactersRect(inGameExit.getPosition().x - inGameExit.getGlobalBounds().width / 2,
 		inGameExit.getPosition().y, inGameExit.getGlobalBounds().width, inGameExit.getGlobalBounds().height * 2);
@@ -408,7 +408,7 @@ void gameSelectLvl()
 		}
 		inGameExit.setFillColor(sf::Color(255, 255, 255));
 	} else {
-		inGameExit.setFillColor(sf::Color(198, 198, 198));
+		inGameExit.setFillColor(sf::Color(255,224,178));
 	}
 	inGameExit.setOrigin(inGameExit.getGlobalBounds().width/2, 0);
 	window.draw(inGameExit);
@@ -420,7 +420,8 @@ void gameSelectLvl()
 	window.draw(btnTxt);
 	btnLvl.drawBtn(window, "LVL 1", 30, font1);
 	if(btnLvl.btnClicked(window)) {
-		currentScreen = SCENE_SELECT_LVL;
+		raceLvl = 1;
+		currentScreen = SCENE_GAME_SCREEN;
 	}
 
 	btnLvl.setLocation(window.getSize().x/2, window.getSize().y/2);
@@ -430,7 +431,8 @@ void gameSelectLvl()
 	window.draw(btnTxt);
 	btnLvl.drawBtn(window, "LVL 2", 30, font1);
 	if(btnLvl.btnClicked(window)) {
-
+		raceLvl = 2;
+		currentScreen = SCENE_GAME_SCREEN;
 	}
 
 	btnLvl.setLocation(window.getSize().x/2 + 150, window.getSize().y/2 + 100);
@@ -440,7 +442,8 @@ void gameSelectLvl()
 	window.draw(btnTxt);
 	btnLvl.drawBtn(window, "LVL 3", 30, font1);
 	if(btnLvl.btnClicked(window)) {
-
+		raceLvl = 3;
+		currentScreen = SCENE_GAME_SCREEN;
 	}
 }
 
