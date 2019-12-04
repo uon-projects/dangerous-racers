@@ -182,7 +182,7 @@ TracksBackground tracksBackground[3];
 TracksBackground tracksBackgroundMask[3];
 TrackObjects trackObjects[2];
 CarModels carModels[2];
-const int carsPerLvl = 1;
+const int carsPerLvl = 4;
 Car car[carsPerLvl];
 sf::Font font1(zfSFML.loadFont("Assets/fonts/", "big_space", "otf"));
 MD2 btnLvl;
@@ -207,14 +207,41 @@ void showGameScreen() {
 	srand(time(NULL));
 	
 	if(outOfTrack) {
-		maxSpeed = 5;
+		maxSpeed = 1;
+		turnSpeed = 0.01;
 	} else {
 		maxSpeed = 15;
+		turnSpeed = 0.05;
 	}
-	if (Up && speed<maxSpeed + rand()%2 + 1 && raceStarted)
-		if (speed < 0)  speed += dec;
-		else  speed += acc + rand()%3/10;
-				
+
+	if(outOfTrack && raceStarted) {
+		if (Up && speed<maxSpeed + rand()%2 + 1) {
+			if (speed < 0) {
+				speed += dec;
+			} else {
+				speed += acc + rand()%3/10;
+			}
+		} else {
+			if(speed > 10) {
+				turnSpeed = 0.002;
+				speed -= 0.1;
+			} else if(speed > 6) {
+				turnSpeed = 0.004;
+				speed -= 0.05;
+			} else {
+				speed -= 0.1;
+			}
+		}
+	} else {
+		if (Up && speed<maxSpeed + rand()%2 + 1 && raceStarted) {
+			if (speed < 0) {
+				speed += dec;
+			} else {
+				speed += acc + rand()%3/10;
+			}
+		}
+	}
+
 	if (Down && speed>-maxSpeed && raceStarted)
 		if (speed > 0) speed -= dec * 2;
 		else  speed -= acc;
@@ -403,6 +430,17 @@ void showGameScreen() {
 		window.draw(inRacePlace);
 	}
 
+	sf::RectangleShape menuSqr;
+	menuSqr.setSize(sf::Vector2f(20, 20));
+	menuSqr.setOrigin(10, 10);
+	menuSqr.setFillColor(sf::Color(255,193,7));
+	for(int i=0; i<7; i++) {
+		menuSqr.setPosition(checkpointsLvl1[i][0]-offsetX, checkpointsLvl1[i][1]-offsetY);
+		window.draw(menuSqr);
+		menuSqr.setPosition(checkpointsLvl1[i][2]-offsetX, checkpointsLvl1[i][3]-offsetY);
+		window.draw(menuSqr);
+	}
+
 }
 
 void initialiseGameData()
@@ -441,7 +479,7 @@ void initialiseGameData()
 	sCar2.scale(0.7, 0.7);
 	carModels[1].carSprite = sCar2;
 	if(raceLvl == 1) {
-		userCar = 0;
+		userCar = 3;
 		for(int i=0;i<carsPerLvl;i++)
 		{
 			car[i].x= 260 + i%2*135;
@@ -465,7 +503,7 @@ void initialiseGameData()
 			trackObjects[i].angle = 45;
 		}
 	} else if(raceLvl == 2) {
-		userCar = 0;
+		userCar = 3;
 		for(int i=0;i<carsPerLvl;i++)
 		{
 			car[i].x= 260 + i%2*135;
@@ -480,7 +518,7 @@ void initialiseGameData()
 			car[i].carId = i;
 		}
 	} else if(raceLvl == 3) {
-		userCar = 0;
+		userCar = 3;
 		for(int i=0;i<carsPerLvl;i++)
 		{
 			car[i].x= 260 + i%2*135;
