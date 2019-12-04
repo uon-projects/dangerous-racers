@@ -286,7 +286,8 @@ float turnSpeed=0.05;
 int offsetX=0,offsetY=0;
 bool raceStarted, outOfTrack = false;
 sf::Text inRaceText, inRaceTime, inRaceLap, inRacePlace;
-sf::Vector2i MouseCursorLocation;
+sf::Vector2i lastPos;
+string lastMessage;
 
 void showGameScreen() {
 
@@ -439,14 +440,24 @@ void showGameScreen() {
 			window.draw(menuSqr);
 		}
 	}
+	sf::Vector2i MouseCursorLocation = sf::Mouse::getPosition(window);
 	menuSqr.setPosition(MouseCursorLocation.x, MouseCursorLocation.y);
 	window.draw(menuSqr);
+
+	if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num1) && lastMessage.compare("1: ")) {
+		cout<<"1: ";
+		lastMessage = "1: ";
+	}
+	if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num2) && lastMessage.compare("2: ")) {
+		cout<<"2: ";
+		lastMessage = "2: ";
+	}
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-		if(MouseCursorLocation.x != sf::Mouse::getPosition(window).x && MouseCursorLocation.y != sf::Mouse::getPosition(window).y) {
+		if(lastPos.x != MouseCursorLocation.x && lastPos.y != MouseCursorLocation.y) {
 			cout<<MouseCursorLocation.x + offsetX<<' '<<MouseCursorLocation.y + offsetY<<'\n';
+			lastPos = sf::Mouse::getPosition(window);
 		}
 	}
-	MouseCursorLocation = sf::Mouse::getPosition(window);
 
 	for(int i=0;i<carsPerLvl;i++)
 	{
