@@ -21,7 +21,7 @@ const int SCENE_GAME_SCREEN = 2;
 const int SCENE_OPTIONS_SCREEN = 3;
 const int SCENE_SELECT_LVL = 4;
 
-int levesUnlocked = 1;
+int levesUnlocked = 3;
 int currentScreen = SCENE_SPLASH_SCREEN;
 int raceLvl = 1;
 const float pi = 3.1415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170679;
@@ -191,7 +191,7 @@ float speed=0,angle=0;
 float maxSpeed=15;
 float turnSpeed=0.05;
 int offsetX=0,offsetY=0;
-bool raceStarted;
+bool raceStarted, outOfTrack = false;
 sf::Text inRaceText, inRaceTime, inRaceLap, inRacePlace;
 void showGameScreen() {
 
@@ -206,6 +206,11 @@ void showGameScreen() {
 	
 	srand(time(NULL));
 	
+	if(outOfTrack) {
+		maxSpeed = 5;
+	} else {
+		maxSpeed = 15;
+	}
 	if (Up && speed<maxSpeed + rand()%2 + 1 && raceStarted)
 		if (speed < 0)  speed += dec;
 		else  speed += acc + rand()%3/10;
@@ -285,12 +290,12 @@ void showGameScreen() {
 
 	tracksBackground[raceLvl - 1].backgroundTrack.setPosition(-offsetX,-offsetY);
 	window.draw(tracksBackground[raceLvl - 1].backgroundTrack);
-	if(raceLvl == 1) {
-		tracksBackgroundMask[raceLvl - 1].backgroundTrack.setPosition(-offsetX + 7,-offsetY - 15);
-		window.draw(tracksBackgroundMask[raceLvl - 1].backgroundTrack);
-		/*if (!PixelPerfectDetection(car[userCar].sCar, tracksBackgroundMask[raceLvl - 1].backgroundTrack)) {
-			cout<<"car out of track\n";
-		}*/
+	
+	tracksBackgroundMask[raceLvl - 1].backgroundTrack.setPosition(-offsetX,-offsetY);
+	if (PixelPerfectDetection(car[userCar].sCar, tracksBackgroundMask[raceLvl - 1].backgroundTrack)) {
+		outOfTrack = true;
+	} else {
+		outOfTrack = false;
 	}
 
 	for(int i=0;i<carsPerLvl;i++)
@@ -415,9 +420,17 @@ void initialiseGameData()
 	bg2.setScale(1, 1);
 	tracksBackground[1].backgroundTrack = bg2;
 
+	Sprite bg2Mask = zfSFML.loadSpriteFromTexture("Assets/", "track_2_mask", "png");
+	bg2Mask.setScale(1, 1);
+	tracksBackgroundMask[1].backgroundTrack = bg2Mask;
+
 	Sprite bg3 = zfSFML.loadSpriteFromTexture("Assets/", "track_3", "png");
 	bg3.setScale(1, 1);
 	tracksBackground[2].backgroundTrack = bg3;
+
+	Sprite bg3Mask = zfSFML.loadSpriteFromTexture("Assets/", "track_3_mask", "png");
+	bg3Mask.setScale(1, 1);
+	tracksBackgroundMask[2].backgroundTrack = bg3Mask;
 
 	Sprite sCar1(zfSFML.loadSpriteFromTexture("Assets/", "car1", "png"));
 	sCar1.setOrigin(61, 128);
