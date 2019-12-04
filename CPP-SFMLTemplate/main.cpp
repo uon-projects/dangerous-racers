@@ -180,13 +180,10 @@ float maxSpeed=15;
 float turnSpeed=0.05;
 int offsetX=0,offsetY=0;
 bool raceStarted;
+sf::Text inRaceText, inRaceTime, inRaceLap;
 void showGameScreen() {
 
 	bool Up=false,Right=false,Down=false,Left=false;
-
-	if(inGameClock.getElapsedTime().asSeconds() > 5) {
-		raceStarted = true;
-	}
 
 	if (Keyboard::isKeyPressed(Keyboard::Up)) Up=true;
 	if (Keyboard::isKeyPressed(Keyboard::Right)) Right=true;
@@ -282,11 +279,86 @@ void showGameScreen() {
 		trackObjects[i].sprite.setRotation(trackObjects[i].angle*180/pi);
 		window.draw(trackObjects[i].sprite);
 	}
+	
+	
+	if((int) inGameClock.getElapsedTime().asSeconds() == 5) {
+		inRaceText.setString("START!");
+		inRaceText.setFont(font1);
+		inRaceText.setCharacterSize(120);
+		inRaceText.setOutlineColor(sf::Color::Black);
+		inRaceText.setOutlineThickness(3);
+		inRaceText.setColor(sf::Color::White);
+		inRaceText.setOrigin(inRaceText.getGlobalBounds().width/2, inRaceText.getGlobalBounds().height/2);
+		inRaceText.setPosition(window.getSize().x/2, window.getSize().y/2);
+		window.draw(inRaceText);
+		raceStarted = true;
+	} else if((int) inGameClock.getElapsedTime().asSeconds() == 4) {
+		inRaceText.setString("1");
+		inRaceText.setFont(font1);
+		inRaceText.setCharacterSize(120);
+		inRaceText.setOutlineColor(sf::Color::Black);
+		inRaceText.setOutlineThickness(3);
+		inRaceText.setColor(sf::Color::White);
+		inRaceText.setOrigin(inRaceText.getGlobalBounds().width/2, inRaceText.getGlobalBounds().height/2);
+		inRaceText.setPosition(window.getSize().x/2, window.getSize().y/2);
+		window.draw(inRaceText);
+	} else if((int) inGameClock.getElapsedTime().asSeconds() == 3) {
+		inRaceText.setString("2");
+		inRaceText.setFont(font1);
+		inRaceText.setCharacterSize(120);
+		inRaceText.setOutlineColor(sf::Color::Black);
+		inRaceText.setOutlineThickness(3);
+		inRaceText.setColor(sf::Color::White);
+		inRaceText.setOrigin(inRaceText.getGlobalBounds().width/2, inRaceText.getGlobalBounds().height/2);
+		inRaceText.setPosition(window.getSize().x/2, window.getSize().y/2);
+		window.draw(inRaceText);
+	} else if((int) inGameClock.getElapsedTime().asSeconds() == 2) {
+		inRaceText.setString("3");
+		inRaceText.setFont(font1);
+		inRaceText.setCharacterSize(120);
+		inRaceText.setOutlineColor(sf::Color::Black);
+		inRaceText.setOutlineThickness(3);
+		inRaceText.setColor(sf::Color::White);
+		inRaceText.setOrigin(inRaceText.getGlobalBounds().width/2, inRaceText.getGlobalBounds().height/2);
+		inRaceText.setPosition(window.getSize().x/2, window.getSize().y/2);
+		window.draw(inRaceText);
+	}
+
+	if(raceStarted) {
+		string lap;
+		if(car[userCar].lap!=0) {
+			lap = to_string(car[userCar].lap);
+		} else {
+			lap = to_string(1);
+		}
+		
+		inRaceLap.setString("Lap: " + lap + "/" + to_string(lapsLvl1));
+		inRaceLap.setFont(font1);
+		inRaceLap.setCharacterSize(30);
+		inRaceLap.setOutlineColor(sf::Color::Black);
+		inRaceLap.setOutlineThickness(3);
+		inRaceLap.setColor(sf::Color::White);
+		inRaceLap.setPosition(20, 10);
+		window.draw(inRaceLap);
+		
+		string seconds;
+		seconds = to_string(inGameClock.getElapsedTime().asSeconds() - 5);
+
+		inRaceTime.setString("Time: " + seconds);
+		inRaceTime.setFont(font1);
+		inRaceTime.setCharacterSize(30);
+		inRaceTime.setOutlineColor(sf::Color::Black);
+		inRaceTime.setOutlineThickness(3);
+		inRaceTime.setColor(sf::Color::White);
+		inRaceTime.setPosition(20, 40);
+		window.draw(inRaceTime);
+	}
 
 }
 
 void initialiseGameData()
 {
+
 	Sprite bg1 = zfSFML.loadSpriteFromTexture("Assets/", "track_1", "png");
 	bg1.setScale(1, 1);
 	tracksBackground[0].backgroundTrack = bg1;
