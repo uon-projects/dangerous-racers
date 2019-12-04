@@ -21,9 +21,9 @@ const int SCENE_GAME_SCREEN = 2;
 const int SCENE_OPTIONS_SCREEN = 3;
 const int SCENE_SELECT_LVL = 4;
 
-int levesUnlocked = 2;
+int levesUnlocked = 3;
 int currentScreen = SCENE_SPLASH_SCREEN;
-int raceLvl = 1;
+int raceLvl;
 const float pi = 3.1415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170679;
 const int num=12; //checkpoints
 int points[num][2] = {
@@ -77,7 +77,7 @@ struct Car
 		currentCheckPoint=6;
 	}
 
-	int place()
+	int totalCheckPoints()
 	{
 		int carPlace = lap * 7 + currentCheckPoint;
 		return carPlace;
@@ -118,7 +118,6 @@ struct Car
 		if (currentCheckPoint == 7) {
 			currentCheckPoint = 0;
 			lap++;
-			cout<<"Lap: "<<lap<<"/"<<lapsLvl1<<" for car no "<<carId<<" speed: "<<speed<<'\n';
 		}
 	}
 
@@ -180,7 +179,7 @@ float maxSpeed=15;
 float turnSpeed=0.05;
 int offsetX=0,offsetY=0;
 bool raceStarted;
-sf::Text inRaceText, inRaceTime, inRaceLap;
+sf::Text inRaceText, inRaceTime, inRaceLap, inRacePlace;
 void showGameScreen() {
 
 	bool Up=false,Right=false,Down=false,Left=false;
@@ -198,7 +197,7 @@ void showGameScreen() {
 		if (speed < 0)  speed += dec;
 		else  speed += acc + rand()%3/10;
 				
-	if (Down && speed>-maxSpeed)
+	if (Down && speed>-maxSpeed && raceStarted)
 		if (speed > 0) speed -= dec * 2;
 		else  speed -= acc;
 
@@ -262,6 +261,7 @@ void showGameScreen() {
 	
 	if (car[userCar].x>320 && car[userCar].x<1330) offsetX = car[userCar].x-320;
 	if (car[userCar].y>240 && car[userCar].y<2928) offsetY = car[userCar].y-240;
+	cout<<userCar<<' '<<carsPerLvl<<' '<<car[1].lap<<'\n';
 
 	tracksBackground[raceLvl - 1].backgroundTrack.setPosition(-offsetX,-offsetY);
 	window.draw(tracksBackground[raceLvl - 1].backgroundTrack);
@@ -280,6 +280,12 @@ void showGameScreen() {
 		window.draw(trackObjects[i].sprite);
 	}
 	
+	int userPlace = 1;
+	for(int i=0; i<carsPerLvl; i++) {
+		if(car[i].totalCheckPoints() > car[userCar].totalCheckPoints()) {
+			userPlace++;
+		}
+	}
 	
 	if((int) inGameClock.getElapsedTime().asSeconds() == 5) {
 		inRaceText.setString("START!");
@@ -352,6 +358,15 @@ void showGameScreen() {
 		inRaceTime.setColor(sf::Color::White);
 		inRaceTime.setPosition(20, 40);
 		window.draw(inRaceTime);
+
+		inRacePlace.setString("Place: " + to_string(userPlace) + "/" + to_string(carsPerLvl));
+		inRacePlace.setFont(font1);
+		inRacePlace.setCharacterSize(30);
+		inRacePlace.setOutlineColor(sf::Color::Black);
+		inRacePlace.setOutlineThickness(3);
+		inRacePlace.setColor(sf::Color::White);
+		inRacePlace.setPosition(20, 70);
+		window.draw(inRacePlace);
 	}
 
 }
