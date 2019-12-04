@@ -1,5 +1,4 @@
 #include <iostream>
-#include <fstream>
 #include <SFML/Graphics.hpp>
 #include <string>
 #include "ZeoFlow_SFML.h"
@@ -31,7 +30,7 @@ int pointsPerLvl, cpPerLvl;
 
 const int pointsLvl1 = 12;
 const int pointsLvl2 = 22;
-const int pointsLvl3 = 41;
+const int pointsLvl3 = 46;
 
 int pLvl1[pointsLvl1][2] = {
 	261, 825,
@@ -74,7 +73,52 @@ int pLvl2[pointsLvl2][2] = {
 };
 
 int pLvl3[pointsLvl3][2] = {
-
+	1451, 1930,
+	785, 2013,
+	498, 1997,
+	272, 1834,
+	198, 1701,
+	143, 1473,
+	220, 1225,
+	349, 1056,
+	643, 991,
+	1007, 1023,
+	1373, 1134,
+	1735, 1125,
+	1985, 990,
+	2182, 708,
+	2249, 531,
+	2355, 214,
+	2537, 140,
+	2700, 120,
+	2962, 186,
+	3087, 303,
+	3276, 466,
+	3716, 593,
+	3919, 677,
+	4003, 916,
+	3934, 1113,
+	3764, 1262,
+	3536, 1285,
+	3330, 1110,
+	3079, 868,
+	2890, 751,
+	2651, 707,
+	2452, 788,
+	2352, 916,
+	2328, 1092,
+	2459, 1307,
+	2655, 1315,
+	2846, 1281,
+	3154, 1381,
+	3499, 1498,
+	3644, 1654,
+	3642, 1858,
+	3494, 2001,
+	3287, 2038,
+	2995, 1956,
+	2686, 1888,
+	2203, 1925
 };
 
 int userCar;
@@ -93,7 +137,7 @@ int carsPerLvl[3] = {
 	//lvl 2
 	6,
 	//lvl 3
-	1
+	6
 };
 
 const int cpLvl1 = 7;
@@ -120,17 +164,21 @@ int checkpointsLvl2[cpLvl2][4] = {
 	118, 1140, 476, 1140
 };
 
-const int cpLvl3 = 9;
+const int cpLvl3 = 13;
 int checkpointsLvl3[cpLvl3][4] = {
-	118, 1140, 476, 1140,
-	118, 759, 477, 759,
-	800, 133, 800, 491,
-	1118, 806, 1476, 806,
-	1717, 1635, 2075, 1635,
-	1712, 1864, 2071, 1864,
-	1400, 2054, 1400, 2411,
-	796, 2053, 796, 2411,
-	118, 1669, 476, 1669
+	740, 1749, 740, 2105,
+	88, 1473, 446, 1473,
+	755, 847, 755, 1205,
+	1454, 847, 1454, 1205,
+	1980, 474, 2293, 666,
+	2883, 479, 3012, 139,
+	3550, 795, 3728, 477,
+	3308, 1295, 3421, 947,
+	2854, 1068, 3015, 740,
+	2696, 1484, 2822, 1143,
+	3149, 1657, 3269, 1313,
+	3014, 1749, 3014, 2105,
+	2118, 1749, 2118, 2105
 };
 
 struct TrackObjects
@@ -150,6 +198,13 @@ struct Car
 	Sprite sCar;
 	
 	Car() {
+		speed=0;
+		angle=0;
+		n=0;
+		lap=0;
+	}
+
+	void restart() {
 		speed=0;
 		angle=0;
 		n=0;
@@ -212,6 +267,22 @@ struct Car
 					increaseSpeed();
 				}
 			}
+		} else if(raceLvl == 3) {
+			int x1 = checkpointsLvl3[currentCheckPoint][0];
+			int x2 = checkpointsLvl3[currentCheckPoint][2];
+			int y1 = checkpointsLvl3[currentCheckPoint][1];
+			int y2 = checkpointsLvl3[currentCheckPoint][3];
+			int carX = (int) x;
+			int carY = (int) y;
+			if(y1>y2) {
+				int y3 = y1;
+				y1 = y2;
+				y2 = y3;
+			}
+			if(carY >= y1 - 30 && carY <= y2 + 30 && carX >= x1 - 30 && carX <= x2 + 30) {
+				currentCheckPoint++;
+				increaseSpeed();
+			}
 		}
 		
 		if (currentCheckPoint == cpPerLvl) {
@@ -234,6 +305,11 @@ struct Car
 			if(x>2095) x=2095;
 			if(y<80) y=80;
 			if(y>2444) y=2444;
+		} else if(raceLvl == 3) {
+			if(x<75) x=75;
+			if(x>4030) x=4030;
+			if(y<80) y=80;
+			if(y>2130) y=2130;
 		}
 		if(userCar != carId) {
 			findTarget();
@@ -251,8 +327,8 @@ struct Car
 			tx=pLvl2[n][0];
 			ty=pLvl2[n][1];
 		} else if(raceLvl == 3) {
-			tx=pLvl2[n][0];
-			ty=pLvl2[n][1];
+			tx=pLvl3[n][0];
+			ty=pLvl3[n][1];
 		}
 
 		float beta = angle-atan2(tx-x,-ty+y);
@@ -297,10 +373,7 @@ int offsetX=0,offsetY=0;
 bool raceStarted, outOfTrack = false;
 sf::Text inRaceText, inRaceTime, inRaceLap, inRacePlace;
 sf::Vector2i lastPos;
-string lastMessage;
 
-ofstream g("points.txt");
-int no = 0;
 void showGameScreen() {
 
 	bool Up=false,Right=false,Down=false,Left=false;
@@ -435,7 +508,8 @@ void showGameScreen() {
 			offsetY = 1930-window.getSize().y/2;
 		}
 	}
-
+	
+	tracksBackground[raceLvl - 1].backgroundTrack.setScale(1, 1);
 	tracksBackground[raceLvl - 1].backgroundTrack.setPosition(-offsetX,-offsetY);
 	window.draw(tracksBackground[raceLvl - 1].backgroundTrack);
 	
@@ -477,21 +551,12 @@ void showGameScreen() {
 	menuSqr.setPosition(MouseCursorLocation.x, MouseCursorLocation.y);
 	window.draw(menuSqr);
 
-	if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num1) && lastMessage.compare("1: ")) {
-		//g<<"- - - - - - - - - - - - -\n";
-		//g<<"1: ";
-		lastMessage = "1: ";
-	}
-	if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num2) && lastMessage.compare("2: ")) {
-		//g<<"2: ";
-		lastMessage = "2: ";
-	}
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
 		if(lastPos.x != MouseCursorLocation.x && lastPos.y != MouseCursorLocation.y) {
-			g<<MouseCursorLocation.x + offsetX<<' '<<MouseCursorLocation.y + offsetY<<' ';
-			no++;
-			if(no%2==0) cout<<'\n';
+			cout<<MouseCursorLocation.x + offsetX<<", "<<MouseCursorLocation.y + offsetY<<'\n';
+			cout<<car[userCar].x<<", "<<car[userCar].y<<'\n';
 			lastPos = sf::Mouse::getPosition(window);
+			currentScreen = SCENE_GAME_MENU_SCREEN;
 		}
 	}
 
@@ -562,6 +627,11 @@ void showGameScreen() {
 	}
 
 	if(raceStarted) {
+	
+		tracksBackground[raceLvl - 1].backgroundTrack.setScale(0.04, 0.04);
+		tracksBackground[raceLvl - 1].backgroundTrack.setPosition(window.getSize().x - tracksBackground[raceLvl - 1].backgroundTrack.getGlobalBounds().width - 10, 10);
+		window.draw(tracksBackground[raceLvl - 1].backgroundTrack);
+
 		string lap;
 		if(car[userCar].lap!=0) {
 			lap = to_string(car[userCar].lap);
@@ -694,11 +764,13 @@ void selectLvl(int lvl, int points, int cp)
 	raceStarted = false;
 	pointsPerLvl = points;
 	cpPerLvl = cp;
+	userCar = carsPerLvl[raceLvl - 1] - 1;
+	speed = 0;
 
 	if(raceLvl == 1) {
-		userCar = 0;
 		for(int i=0;i<carsPerLvl[raceLvl - 1];i++)
 		{
+			car[i].restart();
 			car[i].x= 260 + i%2*135;
 			if(i<2) {
 				car[i].y=1920;
@@ -719,9 +791,9 @@ void selectLvl(int lvl, int points, int cp)
 			trackObjects[i].angle = 45;
 		}
 	} else if(raceLvl == 2) {
-		userCar = 0;
 		for(int i=0;i<carsPerLvl[raceLvl - 1];i++)
 		{
+			car[i].restart();
 			car[i].x= 229 + i%2*135;
 			if(i<2) {
 				car[i].y=1300;
@@ -735,10 +807,10 @@ void selectLvl(int lvl, int points, int cp)
 			car[i].currentCheckPoint = cpPerLvl - 1;
 		}
 	} else if(raceLvl == 3) {
-		userCar = 0;
 		angle = 4.71867;
 		for(int i=0;i<carsPerLvl[raceLvl - 1];i++)
 		{
+			car[i].restart();
 			car[i].y= 1996 - i%2*135;
 			if(i<2) {
 				car[i].x=2307;
