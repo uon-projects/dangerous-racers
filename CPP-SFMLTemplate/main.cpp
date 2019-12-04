@@ -14,12 +14,14 @@ using namespace Collision;
 RenderWindow window(VideoMode(800, 500), "Dangerous Racing");
 ZeoFlow_SFML zfSFML;
 
+sf::Clock inGameClock;
 const int SCENE_SPLASH_SCREEN = 0;
 const int SCENE_GAME_MENU_SCREEN = 1;
 const int SCENE_GAME_SCREEN = 2;
 const int SCENE_OPTIONS_SCREEN = 3;
 const int SCENE_SELECT_LVL = 4;
 
+int levesUnlocked = 2;
 int currentScreen = SCENE_SPLASH_SCREEN;
 int raceLvl = 1;
 const float pi = 3.1415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170679;
@@ -177,8 +179,14 @@ float speed=0,angle=0;
 float maxSpeed=15;
 float turnSpeed=0.05;
 int offsetX=0,offsetY=0;
+bool raceStarted;
 void showGameScreen() {
+
 	bool Up=false,Right=false,Down=false,Left=false;
+
+	if(inGameClock.getElapsedTime().asSeconds() > 5) {
+		raceStarted = true;
+	}
 
 	if (Keyboard::isKeyPressed(Keyboard::Up)) Up=true;
 	if (Keyboard::isKeyPressed(Keyboard::Right)) Right=true;
@@ -189,7 +197,7 @@ void showGameScreen() {
 	
 	srand(time(NULL));
 	
-	if (Up && speed<maxSpeed + rand()%2 + 1)
+	if (Up && speed<maxSpeed + rand()%2 + 1 && raceStarted)
 		if (speed < 0)  speed += dec;
 		else  speed += acc + rand()%3/10;
 				
@@ -247,9 +255,11 @@ void showGameScreen() {
 		}
 	}
 
-	for(int i=0; i<carsPerLvl; i++) {
-		if(i != userCar && car[i].speed < maxSpeed + carsPerLvl - i) {
-			car[i].speed += acc;
+	if(raceStarted) {
+		for(int i=0; i<carsPerLvl; i++) {
+			if(i != userCar && car[i].speed < maxSpeed + carsPerLvl - i) {
+				car[i].speed += acc;
+			}
 		}
 	}
 	
@@ -339,9 +349,9 @@ void initialiseGameData()
 	}
 }
 
-bool isLvlUnlocked(int level)
+bool isLvlUnlocked(int lvl)
 {
-	return true;
+	return lvl <= levesUnlocked;
 }
 
 void gameMenuScreen()
@@ -386,6 +396,13 @@ void gameMenuScreen()
 
 }
 
+void selectLvl(int lvl)
+{
+	inGameClock.restart();
+	raceLvl = lvl;
+	raceStarted = false;
+}
+
 void gameSelectLvl()
 {
 
@@ -414,35 +431,35 @@ void gameSelectLvl()
 	window.draw(inGameExit);
 
 	btnLvl.setLocation(window.getSize().x/2 - 150, window.getSize().y/2 - 100);
-	btnLvl.setUnlocked(true);
+	btnLvl.setUnlocked(isLvlUnlocked(1));
 	btnTxt = btnLvl.drawBtnString("LVL 1", 30);
 	btnTxt.setFont(font1);
 	window.draw(btnTxt);
 	btnLvl.drawBtn(window, "LVL 1", 30, font1);
 	if(btnLvl.btnClicked(window)) {
-		raceLvl = 1;
+		selectLvl(1);
 		currentScreen = SCENE_GAME_SCREEN;
 	}
 
 	btnLvl.setLocation(window.getSize().x/2, window.getSize().y/2);
-	btnLvl.setUnlocked(false);
+	btnLvl.setUnlocked(isLvlUnlocked(2));
 	btnTxt = btnLvl.drawBtnString("LVL 2", 30);
 	btnTxt.setFont(font1);
 	window.draw(btnTxt);
 	btnLvl.drawBtn(window, "LVL 2", 30, font1);
 	if(btnLvl.btnClicked(window)) {
-		raceLvl = 2;
+		selectLvl(2);
 		currentScreen = SCENE_GAME_SCREEN;
 	}
 
 	btnLvl.setLocation(window.getSize().x/2 + 150, window.getSize().y/2 + 100);
-	btnLvl.setUnlocked(false);
+	btnLvl.setUnlocked(isLvlUnlocked(3));
 	btnTxt = btnLvl.drawBtnString("LVL 3", 30);
 	btnTxt.setFont(font1);
 	window.draw(btnTxt);
 	btnLvl.drawBtn(window, "LVL 3", 30, font1);
 	if(btnLvl.btnClicked(window)) {
-		raceLvl = 3;
+		selectLvl(3);
 		currentScreen = SCENE_GAME_SCREEN;
 	}
 }
