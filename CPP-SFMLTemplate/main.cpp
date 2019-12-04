@@ -26,12 +26,12 @@ int currentScreen = SCENE_SPLASH_SCREEN;
 int raceLvl = 1;
 const float pi = 3.1415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170679;
 
-const int carsPerLvl = 1;
 int pointsPerLvl, cpPerLvl;
 
 const int pointsLvl1 = 12;
 const int pointsLvl2 = 22;
-const int pointsLvl3 = 0;
+const int pointsLvl3 = 41;
+
 int pLvl1[pointsLvl1][2] = {
 	261, 825,
 	396, 436,
@@ -72,6 +72,31 @@ int pLvl2[pointsLvl2][2] = {
 	260, 1310
 };
 
+int pLvl3[pointsLvl3][2] = {
+	221, 747,
+	364, 323,
+	584, 238,
+	807, 196,
+	1092, 228,
+	1298, 342,
+	1397, 572,
+	1199, 972,
+	1420, 1218,
+	1687, 1192,
+	1874, 1281,
+	1973, 1464,
+	1991, 1665,
+	1977, 1950,
+	1878, 2193,
+	1491, 2323,
+	1125, 2310,
+	761, 2340,
+	466, 2240,
+	270, 2011,
+	189, 1692,
+	260, 1310
+};
+
 int userCar;
 int lapsPerLvl[3] = {
 	//lvl 1
@@ -81,6 +106,16 @@ int lapsPerLvl[3] = {
 	//lvl 3
 	15
 };
+
+int carsPerLvl[3] = {
+	//lvl 1
+	4,
+	//lvl 2
+	6,
+	//lvl 3
+	1
+};
+
 const int cpLvl1 = 7;
 int checkpointsLvl1[cpLvl1][4] = {
 	149, 802, 507, 802,
@@ -219,11 +254,6 @@ struct Car
 			if(x>2095) x=2095;
 			if(y<80) y=80;
 			if(y>2444) y=2444;
-		} else if(raceLvl == 3) {
-			if(x<75) x=75;
-			if(x>4054) x=4054;
-			if(y<80) y=80;
-			if(y>2114) y=2114;
 		}
 		if(userCar != carId) {
 			findTarget();
@@ -276,7 +306,7 @@ TracksBackground tracksBackground[3];
 TracksBackground tracksBackgroundMask[3];
 TrackObjects trackObjects[2];
 CarModels carModels[2];
-Car car[carsPerLvl];
+Car car[8];
 sf::Font font1(zfSFML.loadFont("Assets/fonts/", "big_space", "otf"));
 MD2 btnLvl;
 
@@ -354,21 +384,21 @@ void showGameScreen() {
 	car[userCar].angle = angle;
 			
 	car[userCar].move();
-	for(int i=0;i<carsPerLvl;i++) {
+	for(int i=0;i<carsPerLvl[raceLvl - 1];i++) {
 		if(i != userCar) {
 			car[i].move();
 		}
 	}
 			
-	for(int i=0;i<carsPerLvl;i++){
+	for(int i=0;i<carsPerLvl[raceLvl - 1];i++){
 		if(i != userCar) {
 			car[i].findTarget();
 		}
 	}
 
 	srand(time(NULL));
-	for(int i=0;i<carsPerLvl;i++)
-		for(int j=0;j<carsPerLvl;j++) {
+	for(int i=0;i<carsPerLvl[raceLvl - 1];i++)
+		for(int j=0;j<carsPerLvl[raceLvl - 1];j++) {
 			int dx=0, dy=0;
 			if (PixelPerfectDetection(car[i].sCar, car[j].sCar) && i != j) {
 				dx = car[i].x-car[j].x;
@@ -391,28 +421,41 @@ void showGameScreen() {
 			}
 		}
 	}
-
 	if(raceStarted) {
-		for(int i=0; i<carsPerLvl; i++) {
-			if(i != userCar && car[i].speed < maxSpeed + carsPerLvl - i) {
+		for(int i=0; i<carsPerLvl[raceLvl - 1]; i++) {
+			if(i != userCar && car[i].speed < maxSpeed + carsPerLvl[raceLvl - 1] - i) {
 				car[i].speed += acc;
 			}
 		}
 	}
 	
 	if(raceLvl == 1) {
-		if (car[userCar].x>320 && car[userCar].x<1330) offsetX = car[userCar].x-320;
-		if (car[userCar].y>240 && car[userCar].y<2928) offsetY = car[userCar].y-240;
+		if (car[userCar].x>window.getSize().x/2 && car[userCar].x<1330) {
+			offsetX = car[userCar].x-window.getSize().x/2;
+		}
+		if (car[userCar].y>window.getSize().y/2 && car[userCar].y<2928) {
+			offsetY = car[userCar].y-window.getSize().y/2;
+		}
 	} else if(raceLvl == 2) {
-		if (car[userCar].x>320 && car[userCar].x<1705) offsetX = car[userCar].x-320;
-		if (car[userCar].y>260 && car[userCar].y<2300) offsetY = car[userCar].y-260;
+		if (car[userCar].x>window.getSize().x/2 && car[userCar].x<1705) {
+			offsetX = car[userCar].x-window.getSize().x/2;
+		}
+		if (car[userCar].y>window.getSize().y/2 && car[userCar].y<2300) {
+			offsetY = car[userCar].y-window.getSize().y/2;
+		}
 	} else if(raceLvl == 3) {
-		if (car[userCar].x>320 && car[userCar].x<3670) offsetX = car[userCar].x-320;
-		if (car[userCar].y>260 && car[userCar].y<1920) offsetY = car[userCar].y-260;
+		if (car[userCar].x>window.getSize().x/2 && car[userCar].x<3670) {
+			offsetX = car[userCar].x-window.getSize().x/2;
+		}
+		if (car[userCar].y>window.getSize().y/2 && car[userCar].y<1900) {
+			offsetY = car[userCar].y-window.getSize().y/2;
+		}
 	}
 
 	tracksBackground[raceLvl - 1].backgroundTrack.setPosition(-offsetX,-offsetY);
 	window.draw(tracksBackground[raceLvl - 1].backgroundTrack);
+
+	//cout<<offsetX<<' '<<offsetY<<' '<<car[userCar].x<<' '<<car[userCar].y<<'\n';
 	
 	tracksBackgroundMask[raceLvl - 1].backgroundTrack.setPosition(-offsetX,-offsetY);
 	if (PixelPerfectDetection(car[userCar].sCar, tracksBackgroundMask[raceLvl - 1].backgroundTrack)) {
@@ -468,7 +511,7 @@ void showGameScreen() {
 		}
 	}
 
-	for(int i=0;i<carsPerLvl;i++)
+	for(int i=0;i<carsPerLvl[raceLvl - 1];i++)
 	{
 		car[i].sCar.setPosition(car[i].x-offsetX,car[i].y-offsetY);
 		car[i].sCar.setRotation(car[i].angle*180/pi);
@@ -485,7 +528,7 @@ void showGameScreen() {
 	}
 	
 	int userPlace = 1;
-	for(int i=0; i<carsPerLvl; i++) {
+	for(int i=0; i<carsPerLvl[raceLvl - 1]; i++) {
 		if(car[i].totalCheckPoints() > car[userCar].totalCheckPoints()) {
 			userPlace++;
 		}
@@ -534,8 +577,6 @@ void showGameScreen() {
 		window.draw(inRaceText);
 	}
 
-	cout<<car[userCar].angle<<'\n';
-
 	if(raceStarted) {
 		string lap;
 		if(car[userCar].lap!=0) {
@@ -565,7 +606,7 @@ void showGameScreen() {
 		inRaceTime.setPosition(20, 40);
 		window.draw(inRaceTime);
 
-		inRacePlace.setString("Place: " + to_string(userPlace) + "/" + to_string(carsPerLvl));
+		inRacePlace.setString("Place: " + to_string(userPlace) + "/" + to_string(carsPerLvl[raceLvl - 1]));
 		inRacePlace.setFont(font1);
 		inRacePlace.setCharacterSize(30);
 		inRacePlace.setOutlineColor(sf::Color::Black);
@@ -672,7 +713,7 @@ void selectLvl(int lvl, int points, int cp)
 
 	if(raceLvl == 1) {
 		userCar = 0;
-		for(int i=0;i<carsPerLvl;i++)
+		for(int i=0;i<carsPerLvl[raceLvl - 1];i++)
 		{
 			car[i].x= 260 + i%2*135;
 			if(i<2) {
@@ -697,7 +738,7 @@ void selectLvl(int lvl, int points, int cp)
 		}
 	} else if(raceLvl == 2) {
 		userCar = 0;
-		for(int i=0;i<carsPerLvl;i++)
+		for(int i=0;i<carsPerLvl[raceLvl - 1];i++)
 		{
 			car[i].x= 229 + i%2*135;
 			if(i<2) {
@@ -713,20 +754,20 @@ void selectLvl(int lvl, int points, int cp)
 		}
 	} else if(raceLvl == 3) {
 		userCar = 0;
-		for(int i=0;i<carsPerLvl;i++)
+		for(int i=0;i<carsPerLvl[raceLvl - 1];i++)
 		{
-			car[i].x= 260 + i%2*135;
+			car[i].y= 1996 - i%2*135;
 			if(i<2) {
-				car[i].y=1920;
+				car[i].x=2307;
 			} else if(i<4) {
-				car[i].y=1920 + 200;
+				car[i].x=2307 + 200;
 			} else if(i<6) {
-				car[i].y=1920 + 400;
+				car[i].x=2307 + 400;
 			}
 			car[i].sCar = carModels[0].carSprite;
 			car[i].carId = i;
 			car[i].currentCheckPoint = cpPerLvl - 1;
-			angle = 0;
+			angle = 4.71867;
 		}
 	}
 }
