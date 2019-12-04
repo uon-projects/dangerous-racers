@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 #include <SFML/Graphics.hpp>
 #include <string>
 #include "ZeoFlow_SFML.h"
@@ -73,28 +74,7 @@ int pLvl2[pointsLvl2][2] = {
 };
 
 int pLvl3[pointsLvl3][2] = {
-	221, 747,
-	364, 323,
-	584, 238,
-	807, 196,
-	1092, 228,
-	1298, 342,
-	1397, 572,
-	1199, 972,
-	1420, 1218,
-	1687, 1192,
-	1874, 1281,
-	1973, 1464,
-	1991, 1665,
-	1977, 1950,
-	1878, 2193,
-	1491, 2323,
-	1125, 2310,
-	761, 2340,
-	466, 2240,
-	270, 2011,
-	189, 1692,
-	260, 1310
+
 };
 
 int userCar;
@@ -319,6 +299,8 @@ sf::Text inRaceText, inRaceTime, inRaceLap, inRacePlace;
 sf::Vector2i lastPos;
 string lastMessage;
 
+ofstream g("points.txt");
+int no = 0;
 void showGameScreen() {
 
 	bool Up=false,Right=false,Down=false,Left=false;
@@ -447,15 +429,15 @@ void showGameScreen() {
 		if (car[userCar].x>window.getSize().x/2 && car[userCar].x<3670) {
 			offsetX = car[userCar].x-window.getSize().x/2;
 		}
-		if (car[userCar].y>window.getSize().y/2 && car[userCar].y<1900) {
+		if (car[userCar].y>window.getSize().y/2 && car[userCar].y<1930) {
 			offsetY = car[userCar].y-window.getSize().y/2;
+		} else if (car[userCar].y>1930) {
+			offsetY = 1930-window.getSize().y/2;
 		}
 	}
 
 	tracksBackground[raceLvl - 1].backgroundTrack.setPosition(-offsetX,-offsetY);
 	window.draw(tracksBackground[raceLvl - 1].backgroundTrack);
-
-	//cout<<offsetX<<' '<<offsetY<<' '<<car[userCar].x<<' '<<car[userCar].y<<'\n';
 	
 	tracksBackgroundMask[raceLvl - 1].backgroundTrack.setPosition(-offsetX,-offsetY);
 	if (PixelPerfectDetection(car[userCar].sCar, tracksBackgroundMask[raceLvl - 1].backgroundTrack)) {
@@ -496,17 +478,19 @@ void showGameScreen() {
 	window.draw(menuSqr);
 
 	if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num1) && lastMessage.compare("1: ")) {
-		cout<<"- - - - - - - - - - - - -\n";
-		cout<<"1: ";
+		//g<<"- - - - - - - - - - - - -\n";
+		//g<<"1: ";
 		lastMessage = "1: ";
 	}
 	if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num2) && lastMessage.compare("2: ")) {
-		cout<<"2: ";
+		//g<<"2: ";
 		lastMessage = "2: ";
 	}
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
 		if(lastPos.x != MouseCursorLocation.x && lastPos.y != MouseCursorLocation.y) {
-			cout<<MouseCursorLocation.x + offsetX<<' '<<MouseCursorLocation.y + offsetY<<'\n';
+			g<<MouseCursorLocation.x + offsetX<<' '<<MouseCursorLocation.y + offsetY<<' ';
+			no++;
+			if(no%2==0) cout<<'\n';
 			lastPos = sf::Mouse::getPosition(window);
 		}
 	}
@@ -720,8 +704,6 @@ void selectLvl(int lvl, int points, int cp)
 				car[i].y=1920;
 			} else if(i<4) {
 				car[i].y=1920 + 200;
-			} else if(i<6) {
-				car[i].y=1920 + 400;
 			}
 			car[i].sCar = carModels[0].carSprite;
 			car[i].carId = i;
@@ -754,6 +736,7 @@ void selectLvl(int lvl, int points, int cp)
 		}
 	} else if(raceLvl == 3) {
 		userCar = 0;
+		angle = 4.71867;
 		for(int i=0;i<carsPerLvl[raceLvl - 1];i++)
 		{
 			car[i].y= 1996 - i%2*135;
@@ -763,11 +746,13 @@ void selectLvl(int lvl, int points, int cp)
 				car[i].x=2307 + 200;
 			} else if(i<6) {
 				car[i].x=2307 + 400;
+			} else if(i<8) {
+				car[i].x=2307 + 800;
 			}
 			car[i].sCar = carModels[0].carSprite;
 			car[i].carId = i;
 			car[i].currentCheckPoint = cpPerLvl - 1;
-			angle = 4.71867;
+			car[i].angle = angle;
 		}
 	}
 }
