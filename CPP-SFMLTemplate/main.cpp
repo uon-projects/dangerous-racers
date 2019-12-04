@@ -21,7 +21,7 @@ const int SCENE_GAME_SCREEN = 2;
 const int SCENE_OPTIONS_SCREEN = 3;
 const int SCENE_SELECT_LVL = 4;
 
-int levesUnlocked = 3;
+int levesUnlocked = 1;
 int currentScreen = SCENE_SPLASH_SCREEN;
 int raceLvl = 1;
 const float pi = 3.1415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170679;
@@ -179,6 +179,7 @@ struct CarModels
 };
 
 TracksBackground tracksBackground[3];
+TracksBackground tracksBackgroundMask[3];
 TrackObjects trackObjects[2];
 CarModels carModels[2];
 const int carsPerLvl = 1;
@@ -284,6 +285,13 @@ void showGameScreen() {
 
 	tracksBackground[raceLvl - 1].backgroundTrack.setPosition(-offsetX,-offsetY);
 	window.draw(tracksBackground[raceLvl - 1].backgroundTrack);
+	if(raceLvl == 1) {
+		tracksBackgroundMask[raceLvl - 1].backgroundTrack.setPosition(-offsetX + 7,-offsetY - 15);
+		window.draw(tracksBackgroundMask[raceLvl - 1].backgroundTrack);
+		/*if (!PixelPerfectDetection(car[userCar].sCar, tracksBackgroundMask[raceLvl - 1].backgroundTrack)) {
+			cout<<"car out of track\n";
+		}*/
+	}
 
 	for(int i=0;i<carsPerLvl;i++)
 	{
@@ -398,6 +406,10 @@ void initialiseGameData()
 	Sprite bg1 = zfSFML.loadSpriteFromTexture("Assets/", "track_1", "png");
 	bg1.setScale(1, 1);
 	tracksBackground[0].backgroundTrack = bg1;
+
+	Sprite bg1Mask = zfSFML.loadSpriteFromTexture("Assets/", "track_1_mask", "png");
+	bg1Mask.setScale(1, 1);
+	tracksBackgroundMask[0].backgroundTrack = bg1Mask;
 
 	Sprite bg2 = zfSFML.loadSpriteFromTexture("Assets/", "track_2", "png");
 	bg2.setScale(1, 1);
