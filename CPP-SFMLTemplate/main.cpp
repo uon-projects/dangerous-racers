@@ -439,12 +439,21 @@ void showGameScreen() {
 			menuSqr.setPosition(checkpointsLvl2[i][2]-offsetX, checkpointsLvl2[i][3]-offsetY);
 			window.draw(menuSqr);
 		}
+	} else if(raceLvl == 3) {
+		for(int i=0; i<cpLvl3; i++) {
+			menuSqr.setPosition(checkpointsLvl3[i][0]-offsetX, checkpointsLvl3[i][1]-offsetY);
+			window.draw(menuSqr);
+			menuSqr.setPosition(checkpointsLvl3[i][2]-offsetX, checkpointsLvl3[i][3]-offsetY);
+			window.draw(menuSqr);
+		}
 	}
+
 	sf::Vector2i MouseCursorLocation = sf::Mouse::getPosition(window);
 	menuSqr.setPosition(MouseCursorLocation.x, MouseCursorLocation.y);
 	window.draw(menuSqr);
 
 	if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num1) && lastMessage.compare("1: ")) {
+		cout<<"- - - - - - - - - - - - -\n";
 		cout<<"1: ";
 		lastMessage = "1: ";
 	}
@@ -524,6 +533,8 @@ void showGameScreen() {
 		inRaceText.setPosition(window.getSize().x/2, window.getSize().y/2);
 		window.draw(inRaceText);
 	}
+
+	cout<<car[userCar].angle<<'\n';
 
 	if(raceStarted) {
 		string lap;
@@ -714,6 +725,8 @@ void selectLvl(int lvl, int points, int cp)
 			}
 			car[i].sCar = carModels[0].carSprite;
 			car[i].carId = i;
+			car[i].currentCheckPoint = cpPerLvl - 1;
+			angle = 0;
 		}
 	}
 }

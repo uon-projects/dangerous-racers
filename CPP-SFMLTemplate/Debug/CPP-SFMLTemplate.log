@@ -1,4 +1,4 @@
-﻿Build started 04/12/2019 17:25:53.
+﻿Build started 04/12/2019 17:41:27.
      1>Project "C:\Users\grigo\Desktop\BSc Games Programming\Year 1\Dangerous-Racers\CPP-SFMLTemplate\CPP-SFMLTemplate.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
          C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /I"C:\SFML v2.4.0 (Win32 - Visual Studio 2012)\include" /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc110.pdb" /Gd /TP /analyze- /errorReport:prompt main.cpp
@@ -62,38 +62,40 @@
      1>c:\users\grigo\desktop\bsc games programming\year 1\dangerous-racers\cpp-sfmltemplate\main.cpp(437): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
      1>c:\users\grigo\desktop\bsc games programming\year 1\dangerous-racers\cpp-sfmltemplate\main.cpp(439): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
      1>c:\users\grigo\desktop\bsc games programming\year 1\dangerous-racers\cpp-sfmltemplate\main.cpp(444): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-     1>c:\users\grigo\desktop\bsc games programming\year 1\dangerous-racers\cpp-sfmltemplate\main.cpp(491): warning C4996: 'sf::Text::setColor': was declared deprecated
+     1>c:\users\grigo\desktop\bsc games programming\year 1\dangerous-racers\cpp-sfmltemplate\main.cpp(446): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\grigo\desktop\bsc games programming\year 1\dangerous-racers\cpp-sfmltemplate\main.cpp(452): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\grigo\desktop\bsc games programming\year 1\dangerous-racers\cpp-sfmltemplate\main.cpp(500): warning C4996: 'sf::Text::setColor': was declared deprecated
                  c:\sfml v2.4.0 (win32 - visual studio 2012)\include\sfml\graphics\text.hpp(177) : see declaration of 'sf::Text::setColor'
-     1>c:\users\grigo\desktop\bsc games programming\year 1\dangerous-racers\cpp-sfmltemplate\main.cpp(493): warning C4244: 'argument' : conversion from 'unsigned int' to 'float', possible loss of data
-     1>c:\users\grigo\desktop\bsc games programming\year 1\dangerous-racers\cpp-sfmltemplate\main.cpp(502): warning C4996: 'sf::Text::setColor': was declared deprecated
+     1>c:\users\grigo\desktop\bsc games programming\year 1\dangerous-racers\cpp-sfmltemplate\main.cpp(502): warning C4244: 'argument' : conversion from 'unsigned int' to 'float', possible loss of data
+     1>c:\users\grigo\desktop\bsc games programming\year 1\dangerous-racers\cpp-sfmltemplate\main.cpp(511): warning C4996: 'sf::Text::setColor': was declared deprecated
                  c:\sfml v2.4.0 (win32 - visual studio 2012)\include\sfml\graphics\text.hpp(177) : see declaration of 'sf::Text::setColor'
-     1>c:\users\grigo\desktop\bsc games programming\year 1\dangerous-racers\cpp-sfmltemplate\main.cpp(504): warning C4244: 'argument' : conversion from 'unsigned int' to 'float', possible loss of data
-     1>c:\users\grigo\desktop\bsc games programming\year 1\dangerous-racers\cpp-sfmltemplate\main.cpp(512): warning C4996: 'sf::Text::setColor': was declared deprecated
+     1>c:\users\grigo\desktop\bsc games programming\year 1\dangerous-racers\cpp-sfmltemplate\main.cpp(513): warning C4244: 'argument' : conversion from 'unsigned int' to 'float', possible loss of data
+     1>c:\users\grigo\desktop\bsc games programming\year 1\dangerous-racers\cpp-sfmltemplate\main.cpp(521): warning C4996: 'sf::Text::setColor': was declared deprecated
                  c:\sfml v2.4.0 (win32 - visual studio 2012)\include\sfml\graphics\text.hpp(177) : see declaration of 'sf::Text::setColor'
-     1>c:\users\grigo\desktop\bsc games programming\year 1\dangerous-racers\cpp-sfmltemplate\main.cpp(514): warning C4244: 'argument' : conversion from 'unsigned int' to 'float', possible loss of data
-     1>c:\users\grigo\desktop\bsc games programming\year 1\dangerous-racers\cpp-sfmltemplate\main.cpp(522): warning C4996: 'sf::Text::setColor': was declared deprecated
+     1>c:\users\grigo\desktop\bsc games programming\year 1\dangerous-racers\cpp-sfmltemplate\main.cpp(523): warning C4244: 'argument' : conversion from 'unsigned int' to 'float', possible loss of data
+     1>c:\users\grigo\desktop\bsc games programming\year 1\dangerous-racers\cpp-sfmltemplate\main.cpp(531): warning C4996: 'sf::Text::setColor': was declared deprecated
                  c:\sfml v2.4.0 (win32 - visual studio 2012)\include\sfml\graphics\text.hpp(177) : see declaration of 'sf::Text::setColor'
-     1>c:\users\grigo\desktop\bsc games programming\year 1\dangerous-racers\cpp-sfmltemplate\main.cpp(524): warning C4244: 'argument' : conversion from 'unsigned int' to 'float', possible loss of data
-     1>c:\users\grigo\desktop\bsc games programming\year 1\dangerous-racers\cpp-sfmltemplate\main.cpp(541): warning C4996: 'sf::Text::setColor': was declared deprecated
+     1>c:\users\grigo\desktop\bsc games programming\year 1\dangerous-racers\cpp-sfmltemplate\main.cpp(533): warning C4244: 'argument' : conversion from 'unsigned int' to 'float', possible loss of data
+     1>c:\users\grigo\desktop\bsc games programming\year 1\dangerous-racers\cpp-sfmltemplate\main.cpp(552): warning C4996: 'sf::Text::setColor': was declared deprecated
                  c:\sfml v2.4.0 (win32 - visual studio 2012)\include\sfml\graphics\text.hpp(177) : see declaration of 'sf::Text::setColor'
-     1>c:\users\grigo\desktop\bsc games programming\year 1\dangerous-racers\cpp-sfmltemplate\main.cpp(553): warning C4996: 'sf::Text::setColor': was declared deprecated
+     1>c:\users\grigo\desktop\bsc games programming\year 1\dangerous-racers\cpp-sfmltemplate\main.cpp(564): warning C4996: 'sf::Text::setColor': was declared deprecated
                  c:\sfml v2.4.0 (win32 - visual studio 2012)\include\sfml\graphics\text.hpp(177) : see declaration of 'sf::Text::setColor'
-     1>c:\users\grigo\desktop\bsc games programming\year 1\dangerous-racers\cpp-sfmltemplate\main.cpp(562): warning C4996: 'sf::Text::setColor': was declared deprecated
+     1>c:\users\grigo\desktop\bsc games programming\year 1\dangerous-racers\cpp-sfmltemplate\main.cpp(573): warning C4996: 'sf::Text::setColor': was declared deprecated
                  c:\sfml v2.4.0 (win32 - visual studio 2012)\include\sfml\graphics\text.hpp(177) : see declaration of 'sf::Text::setColor'
-     1>c:\users\grigo\desktop\bsc games programming\year 1\dangerous-racers\cpp-sfmltemplate\main.cpp(598): warning C4305: 'argument' : truncation from 'double' to 'float'
-     1>c:\users\grigo\desktop\bsc games programming\year 1\dangerous-racers\cpp-sfmltemplate\main.cpp(602): warning C4305: 'argument' : truncation from 'double' to 'float'
-     1>c:\users\grigo\desktop\bsc games programming\year 1\dangerous-racers\cpp-sfmltemplate\main.cpp(616): warning C4244: 'argument' : conversion from 'unsigned int' to 'float', possible loss of data
-     1>c:\users\grigo\desktop\bsc games programming\year 1\dangerous-racers\cpp-sfmltemplate\main.cpp(666): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
-     1>c:\users\grigo\desktop\bsc games programming\year 1\dangerous-racers\cpp-sfmltemplate\main.cpp(680): warning C4305: 'argument' : truncation from 'double' to 'float'
-     1>c:\users\grigo\desktop\bsc games programming\year 1\dangerous-racers\cpp-sfmltemplate\main.cpp(684): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
-     1>c:\users\grigo\desktop\bsc games programming\year 1\dangerous-racers\cpp-sfmltemplate\main.cpp(691): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
-     1>c:\users\grigo\desktop\bsc games programming\year 1\dangerous-racers\cpp-sfmltemplate\main.cpp(707): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
-     1>c:\users\grigo\desktop\bsc games programming\year 1\dangerous-racers\cpp-sfmltemplate\main.cpp(725): warning C4244: 'argument' : conversion from 'unsigned int' to 'float', possible loss of data
-     1>c:\users\grigo\desktop\bsc games programming\year 1\dangerous-racers\cpp-sfmltemplate\main.cpp(733): warning C4244: 'argument' : conversion from 'unsigned int' to 'float', possible loss of data
-     1>c:\users\grigo\desktop\bsc games programming\year 1\dangerous-racers\cpp-sfmltemplate\main.cpp(736): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
-     1>c:\users\grigo\desktop\bsc games programming\year 1\dangerous-racers\cpp-sfmltemplate\main.cpp(736): warning C4244: 'argument' : conversion from 'const float' to 'int', possible loss of data
-     1>c:\users\grigo\desktop\bsc games programming\year 1\dangerous-racers\cpp-sfmltemplate\main.cpp(792): warning C4244: 'argument' : conversion from 'unsigned int' to 'float', possible loss of data
-     1>c:\users\grigo\desktop\bsc games programming\year 1\dangerous-racers\cpp-sfmltemplate\main.cpp(823): warning C4305: 'argument' : truncation from 'double' to 'float'
+     1>c:\users\grigo\desktop\bsc games programming\year 1\dangerous-racers\cpp-sfmltemplate\main.cpp(609): warning C4305: 'argument' : truncation from 'double' to 'float'
+     1>c:\users\grigo\desktop\bsc games programming\year 1\dangerous-racers\cpp-sfmltemplate\main.cpp(613): warning C4305: 'argument' : truncation from 'double' to 'float'
+     1>c:\users\grigo\desktop\bsc games programming\year 1\dangerous-racers\cpp-sfmltemplate\main.cpp(627): warning C4244: 'argument' : conversion from 'unsigned int' to 'float', possible loss of data
+     1>c:\users\grigo\desktop\bsc games programming\year 1\dangerous-racers\cpp-sfmltemplate\main.cpp(677): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\grigo\desktop\bsc games programming\year 1\dangerous-racers\cpp-sfmltemplate\main.cpp(691): warning C4305: 'argument' : truncation from 'double' to 'float'
+     1>c:\users\grigo\desktop\bsc games programming\year 1\dangerous-racers\cpp-sfmltemplate\main.cpp(695): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\grigo\desktop\bsc games programming\year 1\dangerous-racers\cpp-sfmltemplate\main.cpp(702): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\grigo\desktop\bsc games programming\year 1\dangerous-racers\cpp-sfmltemplate\main.cpp(718): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\grigo\desktop\bsc games programming\year 1\dangerous-racers\cpp-sfmltemplate\main.cpp(738): warning C4244: 'argument' : conversion from 'unsigned int' to 'float', possible loss of data
+     1>c:\users\grigo\desktop\bsc games programming\year 1\dangerous-racers\cpp-sfmltemplate\main.cpp(746): warning C4244: 'argument' : conversion from 'unsigned int' to 'float', possible loss of data
+     1>c:\users\grigo\desktop\bsc games programming\year 1\dangerous-racers\cpp-sfmltemplate\main.cpp(749): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
+     1>c:\users\grigo\desktop\bsc games programming\year 1\dangerous-racers\cpp-sfmltemplate\main.cpp(749): warning C4244: 'argument' : conversion from 'const float' to 'int', possible loss of data
+     1>c:\users\grigo\desktop\bsc games programming\year 1\dangerous-racers\cpp-sfmltemplate\main.cpp(805): warning C4244: 'argument' : conversion from 'unsigned int' to 'float', possible loss of data
+     1>c:\users\grigo\desktop\bsc games programming\year 1\dangerous-racers\cpp-sfmltemplate\main.cpp(836): warning C4305: 'argument' : truncation from 'double' to 'float'
        Link:
          C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\grigo\Desktop\BSc Games Programming\Year 1\Dangerous-Racers\Debug\CPP-SFMLTemplate.exe" /INCREMENTAL /NOLOGO /LIBPATH:"C:\SFML v2.4.0 (Win32 - Visual Studio 2012)\lib" "sfml-system-d.lib" "sfml-graphics-d.lib" "sfml-audio-d.lib" "sfml-network-d.lib" "sfml-window-d.lib" kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\grigo\Desktop\BSc Games Programming\Year 1\Dangerous-Racers\Debug\CPP-SFMLTemplate.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\grigo\Desktop\BSc Games Programming\Year 1\Dangerous-Racers\Debug\CPP-SFMLTemplate.lib" /MACHINE:X86 Debug\Collision.obj
          Debug\main.obj
@@ -102,4 +104,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:03.98
+Time Elapsed 00:00:07.15
