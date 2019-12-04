@@ -124,11 +124,23 @@ struct Car
 	void move()
 	{
 		x += sin(angle) * speed;
-		if(x<75) x=75;
-		if(x>1728) x=1728;
 		y -= cos(angle) * speed;
-		if(y<80) y=80;
-		if(y>3108) y=3108;
+		if(raceLvl == 1) {
+			if(x<75) x=75;
+			if(x>1728) x=1728;
+			if(y<80) y=80;
+			if(y>3108) y=3108;
+		} else if(raceLvl == 2) {
+			if(x<75) x=75;
+			if(x>2095) x=2095;
+			if(y<80) y=80;
+			if(y>2444) y=2444;
+		} else if(raceLvl == 3) {
+			if(x<75) x=75;
+			if(x>4054) x=4054;
+			if(y<80) y=80;
+			if(y>2114) y=2114;
+		}
 		if(userCar != carId) {
 			findTarget();
 		}
@@ -259,8 +271,16 @@ void showGameScreen() {
 		}
 	}
 	
-	if (car[userCar].x>320 && car[userCar].x<1330) offsetX = car[userCar].x-320;
-	if (car[userCar].y>240 && car[userCar].y<2928) offsetY = car[userCar].y-240;
+	if(raceLvl == 1) {
+		if (car[userCar].x>320 && car[userCar].x<1330) offsetX = car[userCar].x-320;
+		if (car[userCar].y>240 && car[userCar].y<2928) offsetY = car[userCar].y-240;
+	} else if(raceLvl == 2) {
+		if (car[userCar].x>320 && car[userCar].x<1705) offsetX = car[userCar].x-320;
+		if (car[userCar].y>260 && car[userCar].y<2300) offsetY = car[userCar].y-260;
+	} else if(raceLvl == 3) {
+		if (car[userCar].x>320 && car[userCar].x<3670) offsetX = car[userCar].x-320;
+		if (car[userCar].y>260 && car[userCar].y<1920) offsetY = car[userCar].y-260;
+	}
 
 	tracksBackground[raceLvl - 1].backgroundTrack.setPosition(-offsetX,-offsetY);
 	window.draw(tracksBackground[raceLvl - 1].backgroundTrack);
@@ -272,11 +292,13 @@ void showGameScreen() {
 		window.draw(car[i].sCar);
 	}
 	
-	for(int i=0; i<2; i++) 
-	{
-		trackObjects[i].sprite.setPosition(trackObjects[i].x-offsetX,trackObjects[i].y-offsetY);
-		trackObjects[i].sprite.setRotation(trackObjects[i].angle*180/pi);
-		window.draw(trackObjects[i].sprite);
+	if(raceLvl == 1) {
+		for(int i=0; i<2; i++) 
+		{
+			trackObjects[i].sprite.setPosition(trackObjects[i].x-offsetX,trackObjects[i].y-offsetY);
+			trackObjects[i].sprite.setRotation(trackObjects[i].angle*180/pi);
+			window.draw(trackObjects[i].sprite);
+		}
 	}
 	
 	int userPlace = 1;
@@ -418,6 +440,21 @@ void initialiseGameData()
 			trackObjects[i].angle = 45;
 		}
 	} else if(raceLvl == 2) {
+		userCar = 0;
+		for(int i=0;i<carsPerLvl;i++)
+		{
+			car[i].x= 260 + i%2*135;
+			if(i<2) {
+				car[i].y=1920;
+			} else if(i<4) {
+				car[i].y=1920 + 200;
+			} else if(i<6) {
+				car[i].y=1920 + 400;
+			}
+			car[i].sCar = carModels[0].carSprite;
+			car[i].carId = i;
+		}
+	} else if(raceLvl == 3) {
 		userCar = 0;
 		for(int i=0;i<carsPerLvl;i++)
 		{
