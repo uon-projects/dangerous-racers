@@ -556,7 +556,7 @@ void showGameScreen() {
 			cout<<MouseCursorLocation.x + offsetX<<", "<<MouseCursorLocation.y + offsetY<<'\n';
 			cout<<car[userCar].x<<", "<<car[userCar].y<<'\n';
 			lastPos = sf::Mouse::getPosition(window);
-			currentScreen = SCENE_GAME_MENU_SCREEN;
+			//currentScreen = SCENE_GAME_MENU_SCREEN;
 		}
 	}
 
