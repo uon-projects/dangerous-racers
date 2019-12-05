@@ -553,8 +553,7 @@ void showGameScreen() {
 
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
 		if(lastPos.x != MouseCursorLocation.x && lastPos.y != MouseCursorLocation.y) {
-			cout<<MouseCursorLocation.x + offsetX<<", "<<MouseCursorLocation.y + offsetY<<'\n';
-			cout<<car[userCar].x<<", "<<car[userCar].y<<'\n';
+			//cout<<MouseCursorLocation.x + offsetX<<", "<<MouseCursorLocation.y + offsetY<<'\n';
 			lastPos = sf::Mouse::getPosition(window);
 			//currentScreen = SCENE_GAME_MENU_SCREEN;
 		}
