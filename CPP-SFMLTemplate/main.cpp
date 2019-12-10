@@ -671,8 +671,7 @@ void showGameScreen() {
 
 }
 
-void initialiseGameData()
-{
+void loadGameAssets() {
 
 	Sprite bg1 = zfSFML.loadSpriteFromTexture("Assets/", "track_1", "png");
 	bg1.setScale(1, 1);
@@ -706,7 +705,7 @@ void initialiseGameData()
 	sCar2.setOrigin(128, 128);
 	sCar2.scale(0.7, 0.7);
 	carModels[1].carSprite = sCar2;
-	
+
 }
 
 bool isLvlUnlocked(int lvl)
@@ -903,7 +902,7 @@ int main()
 	Color color(16, 16, 16);
 	splashScreenBg.setFillColor(color);
 	
-	initialiseGameData();
+	loadGameAssets();
 
     while (window.isOpen())
     {
