@@ -4,6 +4,7 @@
 #include "ZeoFlow_SFML.h"
 #include "MD2.h"
 #include "Collision.hpp"
+#include "CarB.cpp"
 
 //Compiler Directives
 using namespace std;
@@ -363,6 +364,7 @@ TracksBackground tracksBackgroundMask[3];
 TrackObjects trackObjects[2];
 CarModels carModels[2];
 Car car[8];
+CarB cars[6];
 sf::Font font1(zfSFML.loadFont("Assets/fonts/", "big_space", "otf"));
 MD2 btnLvl;
 
