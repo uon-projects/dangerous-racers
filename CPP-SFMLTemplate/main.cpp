@@ -197,10 +197,16 @@ struct Car
 	float x,y,speed,angle;
 	int carId, currentCheckPoint, lap, n;
 	int health;
-	Sprite sCar;
+	Sprite sCar, crashedMask;
 	
 	Car() {
 		restart();
+	}
+
+	void setSprite(sf::Sprite carSprite) {
+		sCar = carSprite;
+		carSprite.setColor(sf::Color(0, 0, 0, 180));
+		crashedMask = carSprite;
 	}
 
 	void restart() {
@@ -361,7 +367,7 @@ struct CarModels
 TracksBackground tracksBackground[3];
 TracksBackground tracksBackgroundMask[3];
 TrackObjects trackObjects[2];
-CarModels carModels[2];
+CarModels carModels[3];
 Car car[8];
 CarB cars[6];
 sf::Font font1(zfSFML.loadFont("Assets/fonts/", "big_space", "otf"));
@@ -408,6 +414,7 @@ void drawHealthBar(int carNo)
 
 }
 
+bool readyToRace = false;
 void showGameScreen() {
 
 	bool Up=false,Right=false,Down=false,Left=false;
@@ -603,7 +610,12 @@ void showGameScreen() {
 		car[i].sCar.setPosition(car[i].x-offsetX,car[i].y-offsetY);
 		car[i].sCar.setRotation(car[i].angle*180/pi);
 		window.draw(car[i].sCar);
-		if(raceStarted && i != userCar) {
+		if(car[i].health < 0) {
+			car[i].crashedMask.setPosition(car[i].x-offsetX,car[i].y-offsetY);
+			car[i].crashedMask.setRotation(car[i].angle*180/pi);
+			window.draw(car[i].crashedMask);
+		}
+		if(raceStarted && i != userCar && car[i].health > 0) {
 			drawHealthBar(i);
 		}
 	}
@@ -624,7 +636,33 @@ void showGameScreen() {
 		}
 	}
 	
-	if((int) inGameClock.getElapsedTime().asSeconds() == 5) {
+	if(!readyToRace) {
+		inRaceText.setString("READY?");
+		inRaceText.setFont(font1);
+		inRaceText.setCharacterSize(120);
+		inRaceText.setOutlineColor(sf::Color::Black);
+		inRaceText.setOutlineThickness(3);
+		inRaceText.setColor(sf::Color::White);
+		inRaceText.setOrigin(inRaceText.getLocalBounds().width/2, inRaceText.getLocalBounds().height/2);
+		inRaceText.setPosition(window.getSize().x/2, window.getSize().y/2 - 80);
+		window.draw(inRaceText);
+
+		inRaceText.setString("press anywhere to begin the race");
+		inRaceText.setFont(font1);
+		inRaceText.setCharacterSize(40);
+		inRaceText.setOutlineColor(sf::Color::Black);
+		inRaceText.setOutlineThickness(3);
+		inRaceText.setColor(sf::Color::White);
+		inRaceText.setOrigin(inRaceText.getLocalBounds().width/2, inRaceText.getLocalBounds().height/2);
+		inRaceText.setPosition(window.getSize().x/2, window.getSize().y/2 + 40);
+		window.draw(inRaceText);
+
+		if(sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+			inGameClock.restart();
+			readyToRace = true;
+		}
+
+	} else if((int) inGameClock.getElapsedTime().asSeconds() == 5 && readyToRace) {
 		inRaceText.setString("START!");
 		inRaceText.setFont(font1);
 		inRaceText.setCharacterSize(120);
@@ -635,7 +673,7 @@ void showGameScreen() {
 		inRaceText.setPosition(window.getSize().x/2, window.getSize().y/2);
 		window.draw(inRaceText);
 		raceStarted = true;
-	} else if((int) inGameClock.getElapsedTime().asSeconds() == 4) {
+	} else if((int) inGameClock.getElapsedTime().asSeconds() == 4 && readyToRace) {
 		inRaceText.setString("1");
 		inRaceText.setFont(font1);
 		inRaceText.setCharacterSize(120);
@@ -645,7 +683,7 @@ void showGameScreen() {
 		inRaceText.setOrigin(inRaceText.getGlobalBounds().width/2, inRaceText.getGlobalBounds().height/2);
 		inRaceText.setPosition(window.getSize().x/2, window.getSize().y/2);
 		window.draw(inRaceText);
-	} else if((int) inGameClock.getElapsedTime().asSeconds() == 3) {
+	} else if((int) inGameClock.getElapsedTime().asSeconds() == 3 && readyToRace) {
 		inRaceText.setString("2");
 		inRaceText.setFont(font1);
 		inRaceText.setCharacterSize(120);
@@ -655,7 +693,7 @@ void showGameScreen() {
 		inRaceText.setOrigin(inRaceText.getGlobalBounds().width/2, inRaceText.getGlobalBounds().height/2);
 		inRaceText.setPosition(window.getSize().x/2, window.getSize().y/2);
 		window.draw(inRaceText);
-	} else if((int) inGameClock.getElapsedTime().asSeconds() == 2) {
+	} else if((int) inGameClock.getElapsedTime().asSeconds() == 2 && readyToRace) {
 		inRaceText.setString("3");
 		inRaceText.setFont(font1);
 		inRaceText.setCharacterSize(120);
@@ -767,13 +805,17 @@ void loadGameAssets() {
 	tracksBackgroundMask[2].backgroundTrack = bg3Mask;
 
 	Sprite sCar1(zfSFML.loadSpriteFromTexture("Assets/", "car1", "png"));
-	sCar1.setOrigin(61, 128);
+	sCar1.setOrigin(sCar1.getLocalBounds().width/2, sCar1.getLocalBounds().height/2);
 	sCar1.scale(0.7, 0.7);
 	carModels[0].carSprite = sCar1;
 	Sprite sCar2(zfSFML.loadSpriteFromTexture("Assets/", "car2", "png"));
-	sCar2.setOrigin(128, 128);
+	sCar2.setOrigin(sCar2.getLocalBounds().width/2, sCar2.getLocalBounds().height/2);
 	sCar2.scale(0.7, 0.7);
 	carModels[1].carSprite = sCar2;
+	Sprite sCar3(zfSFML.loadSpriteFromTexture("Assets/", "car3", "png"));
+	sCar3.setOrigin(sCar3.getLocalBounds().width/2, sCar3.getLocalBounds().height/2);
+	sCar3.scale(0.7, 0.7);
+	carModels[2].carSprite = sCar3;
 
 }
 
@@ -833,6 +875,7 @@ void selectLvl(int lvl, int points, int cp)
 	cpPerLvl = cp;
 	userCar = carsPerLvl[raceLvl - 1] - 1;
 	speed = 0;
+	readyToRace = false;
 
 	if(raceLvl == 1) {
 		angle = 0;
@@ -845,7 +888,7 @@ void selectLvl(int lvl, int points, int cp)
 			} else if(i<4) {
 				car[i].y=1920 + 200;
 			}
-			car[i].sCar = carModels[1].carSprite;
+			car[i].setSprite(carModels[2].carSprite);
 			car[i].carId = i;
 			car[i].currentCheckPoint = cpPerLvl - 1;
 		}
@@ -871,7 +914,7 @@ void selectLvl(int lvl, int points, int cp)
 			} else if(i<6) {
 				car[i].y=1300 + 400;
 			}
-			car[i].sCar = carModels[1].carSprite;
+			car[i].setSprite(carModels[2].carSprite);
 			car[i].carId = i;
 			car[i].currentCheckPoint = cpPerLvl - 1;
 		}
@@ -890,7 +933,7 @@ void selectLvl(int lvl, int points, int cp)
 			} else if(i<8) {
 				car[i].x=2307 + 800;
 			}
-			car[i].sCar = carModels[1].carSprite;
+			car[i].setSprite(carModels[2].carSprite);
 			car[i].carId = i;
 			car[i].currentCheckPoint = cpPerLvl - 1;
 			car[i].angle = angle;
