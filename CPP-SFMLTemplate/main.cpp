@@ -196,19 +196,18 @@ struct Car
 {
 	float x,y,speed,angle;
 	int carId, currentCheckPoint, lap, n;
+	int health;
 	Sprite sCar;
 	
 	Car() {
-		speed=0;
-		angle=0;
-		n=0;
-		lap=0;
+		restart();
 	}
 
 	void restart() {
 		speed=0;
 		angle=0;
 		n=0;
+		health=200;
 		lap=0;
 	}
 
@@ -465,6 +464,9 @@ void showGameScreen() {
 					car[i].x+=dx*car[i].speed/50.0;
 					car[i].y+=dy*car[i].speed/50.0;
 				}
+				if(i != userCar && j == userCar) {
+					car[i].health-=10;
+				}
 			}
 		}
 
@@ -634,7 +636,6 @@ void showGameScreen() {
 		sf::RectangleShape carLocation;
 		carLocation.setSize(sf::Vector2f(4, 4));
 		carLocation.setOrigin(2, 2);
-		carLocation.setFillColor(sf::Color(244,67,54));
 		
 		int bgInitialWidth = tracksBackground[raceLvl - 1].backgroundTrack.getGlobalBounds().width;
 		int bgInitialHeight = tracksBackground[raceLvl - 1].backgroundTrack.getGlobalBounds().height;
@@ -649,11 +650,19 @@ void showGameScreen() {
 		int miniMapLeft = tracksBackground[raceLvl - 1].backgroundTrack.getGlobalBounds().left;
 		int miniMapTop = tracksBackground[raceLvl - 1].backgroundTrack.getGlobalBounds().top;
 
-		float carMapX = miniMapW * car[userCar].x / bgInitialWidth;
-		float carMapY = miniMapH * car[userCar].y / bgInitialHeight;
+		for(int i=0; i<carsPerLvl[raceLvl - 1]; i++) {
+			float carMapX = miniMapW * car[i].x / bgInitialWidth;
+			float carMapY = miniMapH * car[i].y / bgInitialHeight;
 
-		carLocation.setPosition(miniMapLeft + carMapX, miniMapTop + carMapY);
-		window.draw(carLocation);
+			if(i!=userCar) {
+				carLocation.setFillColor(sf::Color(21, 21, 21));
+			} else {
+				carLocation.setFillColor(sf::Color(198,255,0));
+			}
+
+			carLocation.setPosition(miniMapLeft + carMapX, miniMapTop + carMapY);
+			window.draw(carLocation);
+		}
 
 		string lap;
 		if(car[userCar].lap!=0) {
