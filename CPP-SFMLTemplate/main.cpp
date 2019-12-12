@@ -204,11 +204,11 @@ struct Car
 	}
 
 	void restart() {
-		speed=0;
-		angle=0;
-		n=0;
-		health=200;
-		lap=0;
+		speed = 0;
+		angle = 0;
+		n = 0;
+		health = 200;
+		lap = 0;
 	}
 
 	int totalCheckPoints()
@@ -379,8 +379,8 @@ void drawHealthBar(int carNo)
 {
 	
 	sf::RectangleShape healthBarOutline, healthBar;
-	healthBarOutline.setSize(sf::Vector2f(70, 10));
-	healthBarOutline.setOrigin(40, 5);
+	healthBarOutline.setSize(sf::Vector2f(70, 12));
+	healthBarOutline.setOrigin(35, 32 - car[carNo].sCar.getLocalBounds().height/2);
 	healthBarOutline.setFillColor(sf::Color(21, 21, 21));
 	healthBarOutline.setPosition(car[carNo].x-offsetX, car[carNo].y-offsetY);
 	healthBarOutline.setRotation(car[carNo].angle*180/pi);
@@ -388,11 +388,23 @@ void drawHealthBar(int carNo)
 
 	int width = car[carNo].health * 68 / 200;
 	healthBar.setSize(sf::Vector2f(width, 8));
-	healthBar.setOrigin(width/2, 4);
+	healthBar.setOrigin(34, 31 - car[carNo].sCar.getLocalBounds().height/2);
 	healthBar.setFillColor(sf::Color(244,67,54));
 	healthBar.setPosition(car[carNo].x-offsetX, car[carNo].y-offsetY);
 	healthBar.setRotation(car[carNo].angle*180/pi);
 	window.draw(healthBar);
+
+	sf::Text txtCarHP;
+	txtCarHP.setString(to_string(car[carNo].health) + "/200");
+	txtCarHP.setFont(font1);
+	txtCarHP.setCharacterSize(15);
+	txtCarHP.setOutlineColor(sf::Color::White);
+	txtCarHP.setOutlineThickness(1);
+	txtCarHP.setColor(sf::Color::Black);
+	txtCarHP.setOrigin(txtCarHP.getLocalBounds().width/2, 40 - car[carNo].sCar.getLocalBounds().height/2);
+	txtCarHP.setPosition(car[carNo].x-offsetX, car[carNo].y-offsetY);
+	txtCarHP.setRotation(car[carNo].angle*180/pi);
+	window.draw(txtCarHP);
 
 }
 
@@ -833,7 +845,7 @@ void selectLvl(int lvl, int points, int cp)
 			} else if(i<4) {
 				car[i].y=1920 + 200;
 			}
-			car[i].sCar = carModels[0].carSprite;
+			car[i].sCar = carModels[1].carSprite;
 			car[i].carId = i;
 			car[i].currentCheckPoint = cpPerLvl - 1;
 		}
@@ -859,7 +871,7 @@ void selectLvl(int lvl, int points, int cp)
 			} else if(i<6) {
 				car[i].y=1300 + 400;
 			}
-			car[i].sCar = carModels[0].carSprite;
+			car[i].sCar = carModels[1].carSprite;
 			car[i].carId = i;
 			car[i].currentCheckPoint = cpPerLvl - 1;
 		}
@@ -878,7 +890,7 @@ void selectLvl(int lvl, int points, int cp)
 			} else if(i<8) {
 				car[i].x=2307 + 800;
 			}
-			car[i].sCar = carModels[0].carSprite;
+			car[i].sCar = carModels[1].carSprite;
 			car[i].carId = i;
 			car[i].currentCheckPoint = cpPerLvl - 1;
 			car[i].angle = angle;
