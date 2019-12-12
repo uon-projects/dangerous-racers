@@ -375,6 +375,27 @@ bool raceStarted, outOfTrack = false;
 sf::Text inRaceText, inRaceTime, inRaceLap, inRacePlace;
 sf::Vector2i lastPos;
 
+void drawHealthBar(int carNo)
+{
+	
+	sf::RectangleShape healthBarOutline, healthBar;
+	healthBarOutline.setSize(sf::Vector2f(70, 10));
+	healthBarOutline.setOrigin(40, 5);
+	healthBarOutline.setFillColor(sf::Color(21, 21, 21));
+	healthBarOutline.setPosition(car[carNo].x-offsetX, car[carNo].y-offsetY);
+	healthBarOutline.setRotation(car[carNo].angle*180/pi);
+	window.draw(healthBarOutline);
+
+	int width = car[carNo].health * 68 / 200;
+	healthBar.setSize(sf::Vector2f(width, 8));
+	healthBar.setOrigin(width/2, 4);
+	healthBar.setFillColor(sf::Color(244,67,54));
+	healthBar.setPosition(car[carNo].x-offsetX, car[carNo].y-offsetY);
+	healthBar.setRotation(car[carNo].angle*180/pi);
+	window.draw(healthBar);
+
+}
+
 void showGameScreen() {
 
 	bool Up=false,Right=false,Down=false,Left=false;
@@ -416,7 +437,7 @@ void showGameScreen() {
 			}
 		}
 	} else {
-		if (Up && speed<maxSpeed + rand()%2 + 1 && raceStarted) {
+		if (Up && speed<maxSpeed + rand()%2 + 2 && raceStarted) {
 			if (speed < 0) {
 				speed += dec;
 			} else {
@@ -442,13 +463,13 @@ void showGameScreen() {
 			
 	car[userCar].move();
 	for(int i=0;i<carsPerLvl[raceLvl - 1];i++) {
-		if(i != userCar) {
+		if(i != userCar && car[i].health>0) {
 			car[i].move();
 		}
 	}
 			
 	for(int i=0;i<carsPerLvl[raceLvl - 1];i++){
-		if(i != userCar) {
+		if(i != userCar && car[i].health>0) {
 			car[i].findTarget();
 		}
 	}
@@ -465,7 +486,7 @@ void showGameScreen() {
 					car[i].y+=dy*car[i].speed/50.0;
 				}
 				if(i != userCar && j == userCar) {
-					car[i].health-=10;
+					car[i].health= car[i].health - 1.5 * car[userCar].speed;
 				}
 			}
 		}
@@ -570,6 +591,9 @@ void showGameScreen() {
 		car[i].sCar.setPosition(car[i].x-offsetX,car[i].y-offsetY);
 		car[i].sCar.setRotation(car[i].angle*180/pi);
 		window.draw(car[i].sCar);
+		if(raceStarted && i != userCar) {
+			drawHealthBar(i);
+		}
 	}
 	
 	if(raceLvl == 1) {
