@@ -22,7 +22,7 @@ const int SCENE_GAME_SCREEN = 2;
 const int SCENE_OPTIONS_SCREEN = 3;
 const int SCENE_SELECT_LVL = 4;
 
-int levesUnlocked = 3;
+int levesUnlocked = 1;
 int currentScreen = SCENE_SPLASH_SCREEN;
 int raceLvl = 1;
 const float pi = 3.1415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170679;
@@ -384,7 +384,7 @@ float speed=0,angle=0;
 float maxSpeed=15;
 float turnSpeed=0.05;
 int offsetX=0,offsetY=0;
-bool raceStarted, outOfTrack = false;
+bool raceStarted, raceEnded, outOfTrack = false;
 sf::Text inRaceText, inRaceTime, inRaceLap, inRacePlace;
 sf::Vector2i lastPos;
 
@@ -422,6 +422,7 @@ void drawHealthBar(int carNo)
 }
 
 bool readyToRace = false;
+int raceFinishedTime, raceFinishedPlace;
 void showGameScreen() {
 
 	bool Up=false,Right=false,Down=false,Left=false;
@@ -444,7 +445,7 @@ void showGameScreen() {
 		turnSpeed = 0.05;
 	}
 
-	if(outOfTrack && raceStarted) {
+	if(outOfTrack && raceStarted && !raceEnded) {
 		if (Up && speed<maxSpeed + rand()%2 + 1) {
 			if (speed < 0) {
 				speed += dec;
@@ -484,8 +485,10 @@ void showGameScreen() {
 	if (Right && speed!=0)  angle += turnSpeed * speed/maxSpeed;
 		if (Left && speed!=0)   angle -= turnSpeed * speed/maxSpeed;
 
-	car[userCar].speed = speed;
-	car[userCar].angle = angle;
+	if(!raceEnded) {
+		car[userCar].speed = speed;
+		car[userCar].angle = angle;
+	}
 			
 	car[userCar].move();
 	for(int i=0;i<carsPerLvl[raceLvl - 1];i++) {
@@ -495,7 +498,9 @@ void showGameScreen() {
 	}
 			
 	for(int i=0;i<carsPerLvl[raceLvl - 1];i++){
-		if(i != userCar && car[i].health>0) {
+		if(raceEnded && car[i].health>0) {
+			car[i].findTarget();
+		} else if(i != userCar && car[i].health>0) {
 			car[i].findTarget();
 		}
 	}
@@ -511,7 +516,7 @@ void showGameScreen() {
 					car[i].x+=dx*car[i].speed/50.0;
 					car[i].y+=dy*car[i].speed/50.0;
 				}
-				if(i != userCar && j == userCar) {
+				if(i != userCar && j == userCar && !raceEnded) {
 					car[i].health= car[i].health - 1.5 * car[userCar].speed;
 				}
 			}
@@ -532,6 +537,14 @@ void showGameScreen() {
 		for(int i=0; i<carsPerLvl[raceLvl - 1]; i++) {
 			if(i != userCar && car[i].speed < maxSpeed + carsPerLvl[raceLvl - 1] - i) {
 				car[i].speed += acc;
+			}
+		}
+	} else if(raceEnded) {
+		for(int i=0; i<carsPerLvl[raceLvl - 1]; i++) {
+			if(car[i].speed < maxSpeed - 3) {
+				car[i].speed += acc;
+			} else {
+				car[i].speed -= dec;
 			}
 		}
 	}
@@ -567,7 +580,7 @@ void showGameScreen() {
 	window.draw(tracksBackground[raceLvl - 1].backgroundTrack);
 	
 	tracksBackgroundMask[raceLvl - 1].backgroundTrack.setPosition(-offsetX,-offsetY);
-	if (PixelPerfectDetection(car[userCar].sCar, tracksBackgroundMask[raceLvl - 1].backgroundTrack)) {
+	if (!raceEnded && raceStarted && PixelPerfectDetection(car[userCar].sCar, tracksBackgroundMask[raceLvl - 1].backgroundTrack)) {
 		outOfTrack = true;
 	} else {
 		outOfTrack = false;
@@ -622,7 +635,7 @@ void showGameScreen() {
 			car[i].crashedMask.setRotation(car[i].angle*180/pi);
 			window.draw(car[i].crashedMask);
 		}
-		if(raceStarted && i != userCar && car[i].health > 0) {
+		if(raceStarted && !raceEnded && i != userCar && car[i].health > 0) {
 			drawHealthBar(i);
 		}
 	}
@@ -712,7 +725,7 @@ void showGameScreen() {
 		window.draw(inRaceText);
 	}
 
-	if(raceStarted) {
+	if(raceStarted && !raceEnded) {
 	
 		sf::RectangleShape carLocation;
 		carLocation.setSize(sf::Vector2f(4, 4));
@@ -752,6 +765,15 @@ void showGameScreen() {
 			lap = to_string(1);
 		}
 		
+		if(stoi(lap) == lapsPerLvl[raceLvl - 1] + 1) {
+			raceEnded = true;
+			raceFinishedTime = inGameClock.getElapsedTime().asSeconds();
+			raceFinishedPlace = userPlace;
+			if(userPlace == 1 && levesUnlocked<=raceLvl) {
+				levesUnlocked++;
+			}
+		}
+
 		inRaceLap.setString("Lap: " + lap + "/" + to_string(lapsPerLvl[raceLvl - 1]));
 		inRaceLap.setFont(font1);
 		inRaceLap.setCharacterSize(30);
@@ -781,6 +803,52 @@ void showGameScreen() {
 		inRacePlace.setColor(sf::Color::White);
 		inRacePlace.setPosition(20, 70);
 		window.draw(inRacePlace);
+	} else if (raceEnded) {
+	
+		sf::RectangleShape endScreenBg;
+		endScreenBg.setSize(sf::Vector2f(window.getSize().x, window.getSize().y));
+		endScreenBg.setOrigin(0, 0);
+		endScreenBg.setFillColor(sf::Color(21, 21, 21, 160));
+		window.draw(endScreenBg);
+
+		inRaceText.setString("Raced time: " + to_string(raceFinishedTime));
+		inRaceText.setFont(font1);
+		inRaceText.setCharacterSize(40);
+		inRaceText.setOutlineColor(sf::Color::Black);
+		inRaceText.setOutlineThickness(3);
+		inRaceText.setColor(sf::Color::White);
+		inRaceText.setOrigin(inRaceText.getLocalBounds().width/2, inRaceText.getLocalBounds().height/2);
+		inRaceText.setPosition(window.getSize().x/2, window.getSize().y/2 - 50);
+		window.draw(inRaceText);
+
+		inRaceText.setString("Place: " + to_string(raceFinishedPlace));
+		inRaceText.setFont(font1);
+		inRaceText.setCharacterSize(40);
+		inRaceText.setOutlineColor(sf::Color::Black);
+		inRaceText.setOutlineThickness(3);
+		inRaceText.setColor(sf::Color::White);
+		inRaceText.setOrigin(inRaceText.getLocalBounds().width/2, inRaceText.getLocalBounds().height/2);
+		inRaceText.setPosition(window.getSize().x/2, window.getSize().y/2);
+		window.draw(inRaceText);
+
+		sf::Text inGameExit;
+		inGameExit.setFont(font1);
+		inGameExit.setString("GO BACK");
+		inGameExit.setPosition(window.getSize().x/2, window.getSize().y/2 + 50);
+		inGameExit.setCharacterSize(26);
+		sf::IntRect btnCharactersRect(inGameExit.getPosition().x - inGameExit.getGlobalBounds().width / 2,
+			inGameExit.getPosition().y, inGameExit.getGlobalBounds().width, inGameExit.getGlobalBounds().height * 2);
+		if (btnCharactersRect.contains(sf::Mouse::getPosition(window))) {
+			if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+				currentScreen = SCENE_GAME_MENU_SCREEN;
+			}
+			inGameExit.setFillColor(sf::Color(255, 255, 255));
+		} else {
+			inGameExit.setFillColor(sf::Color(255,224,178));
+		}
+		inGameExit.setOrigin(inGameExit.getGlobalBounds().width/2, 0);
+		window.draw(inGameExit);
+
 	}
 
 }
@@ -883,6 +951,7 @@ void selectLvl(int lvl, int points, int cp)
 	userCar = carsPerLvl[raceLvl - 1] - 1;
 	speed = 0;
 	readyToRace = false;
+	raceEnded = false;
 
 	srand(time(NULL));
 	if(raceLvl == 1) {
