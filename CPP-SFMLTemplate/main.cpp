@@ -196,17 +196,24 @@ struct Car
 {
 	float x,y,speed,angle;
 	int carId, currentCheckPoint, lap, n;
-	int health;
+	int health, maxHealth;
 	Sprite sCar, crashedMask;
 	
 	Car() {
 		restart();
 	}
 
-	void setSprite(sf::Sprite carSprite) {
+	void setCarModel(sf::Sprite carSprite, int carModel) {
 		sCar = carSprite;
 		carSprite.setColor(sf::Color(0, 0, 0, 180));
 		crashedMask = carSprite;
+		if(carModel == 0) {
+			health = maxHealth = 300;
+		} else if(carModel == 1) {
+			health = maxHealth = 350;
+		} else if(carModel == 2) {
+			health = maxHealth = 400;
+		}
 	}
 
 	void restart() {
@@ -392,7 +399,7 @@ void drawHealthBar(int carNo)
 	healthBarOutline.setRotation(car[carNo].angle*180/pi);
 	window.draw(healthBarOutline);
 
-	int width = car[carNo].health * 68 / 200;
+	int width = car[carNo].health * 68 / car[carNo].maxHealth;
 	healthBar.setSize(sf::Vector2f(width, 8));
 	healthBar.setOrigin(34, 31 - car[carNo].sCar.getLocalBounds().height/2);
 	healthBar.setFillColor(sf::Color(244,67,54));
@@ -401,7 +408,7 @@ void drawHealthBar(int carNo)
 	window.draw(healthBar);
 
 	sf::Text txtCarHP;
-	txtCarHP.setString(to_string(car[carNo].health) + "/200");
+	txtCarHP.setString(to_string(car[carNo].health) + "/" + to_string(car[carNo].maxHealth));
 	txtCarHP.setFont(font1);
 	txtCarHP.setCharacterSize(15);
 	txtCarHP.setOutlineColor(sf::Color::White);
@@ -814,7 +821,7 @@ void loadGameAssets() {
 	carModels[1].carSprite = sCar2;
 	Sprite sCar3(zfSFML.loadSpriteFromTexture("Assets/", "car3", "png"));
 	sCar3.setOrigin(sCar3.getLocalBounds().width/2, sCar3.getLocalBounds().height/2);
-	sCar3.scale(0.7, 0.7);
+	sCar3.scale(0.8, 0.8);
 	carModels[2].carSprite = sCar3;
 
 }
@@ -877,6 +884,7 @@ void selectLvl(int lvl, int points, int cp)
 	speed = 0;
 	readyToRace = false;
 
+	srand(time(NULL));
 	if(raceLvl == 1) {
 		angle = 0;
 		for(int i=0;i<carsPerLvl[raceLvl - 1];i++)
@@ -888,7 +896,8 @@ void selectLvl(int lvl, int points, int cp)
 			} else if(i<4) {
 				car[i].y=1920 + 200;
 			}
-			car[i].setSprite(carModels[2].carSprite);
+			int carType = rand() % 3;
+			car[i].setCarModel(carModels[carType].carSprite, carType);
 			car[i].carId = i;
 			car[i].currentCheckPoint = cpPerLvl - 1;
 		}
@@ -914,7 +923,8 @@ void selectLvl(int lvl, int points, int cp)
 			} else if(i<6) {
 				car[i].y=1300 + 400;
 			}
-			car[i].setSprite(carModels[2].carSprite);
+			int carType = rand() % 3;
+			car[i].setCarModel(carModels[carType].carSprite, carType);
 			car[i].carId = i;
 			car[i].currentCheckPoint = cpPerLvl - 1;
 		}
@@ -933,7 +943,8 @@ void selectLvl(int lvl, int points, int cp)
 			} else if(i<8) {
 				car[i].x=2307 + 800;
 			}
-			car[i].setSprite(carModels[2].carSprite);
+			int carType = rand() % 3;
+			car[i].setCarModel(carModels[carType].carSprite, carType);
 			car[i].carId = i;
 			car[i].currentCheckPoint = cpPerLvl - 1;
 			car[i].angle = angle;
