@@ -384,6 +384,7 @@ void showGameScreen() {
 	if (Keyboard::isKeyPressed(Keyboard::Right)) Right=true;
 	if (Keyboard::isKeyPressed(Keyboard::Down)) Down=true;
 	if (Keyboard::isKeyPressed(Keyboard::Left)) Left=true;
+	if (Keyboard::isKeyPressed(Keyboard::Key::E)) currentScreen = SCENE_GAME_MENU_SCREEN;
 
 	float acc = 0.2, dec = 0.2;
 	
@@ -511,6 +512,7 @@ void showGameScreen() {
 		}
 	}
 	
+	tracksBackground[raceLvl - 1].backgroundTrack.setColor(sf::Color(255, 255, 255, 255));
 	tracksBackground[raceLvl - 1].backgroundTrack.setScale(1, 1);
 	tracksBackground[raceLvl - 1].backgroundTrack.setPosition(-offsetX,-offsetY);
 	window.draw(tracksBackground[raceLvl - 1].backgroundTrack);
@@ -629,9 +631,29 @@ void showGameScreen() {
 
 	if(raceStarted) {
 	
-		tracksBackground[raceLvl - 1].backgroundTrack.setScale(0.04, 0.04);
+		sf::RectangleShape carLocation;
+		carLocation.setSize(sf::Vector2f(4, 4));
+		carLocation.setOrigin(2, 2);
+		carLocation.setFillColor(sf::Color(244,67,54));
+		
+		int bgInitialWidth = tracksBackground[raceLvl - 1].backgroundTrack.getGlobalBounds().width;
+		int bgInitialHeight = tracksBackground[raceLvl - 1].backgroundTrack.getGlobalBounds().height;
+
+		tracksBackground[raceLvl - 1].backgroundTrack.setColor(sf::Color(255, 255, 255, 200));
+		tracksBackground[raceLvl - 1].backgroundTrack.setScale(0.045, 0.045);
 		tracksBackground[raceLvl - 1].backgroundTrack.setPosition(window.getSize().x - tracksBackground[raceLvl - 1].backgroundTrack.getGlobalBounds().width - 10, 10);
 		window.draw(tracksBackground[raceLvl - 1].backgroundTrack);
+		
+		int miniMapW = tracksBackground[raceLvl - 1].backgroundTrack.getGlobalBounds().width;
+		int miniMapH = tracksBackground[raceLvl - 1].backgroundTrack.getGlobalBounds().height;
+		int miniMapLeft = tracksBackground[raceLvl - 1].backgroundTrack.getGlobalBounds().left;
+		int miniMapTop = tracksBackground[raceLvl - 1].backgroundTrack.getGlobalBounds().top;
+
+		float carMapX = miniMapW * car[userCar].x / bgInitialWidth;
+		float carMapY = miniMapH * car[userCar].y / bgInitialHeight;
+
+		carLocation.setPosition(miniMapLeft + carMapX, miniMapTop + carMapY);
+		window.draw(carLocation);
 
 		string lap;
 		if(car[userCar].lap!=0) {
@@ -768,6 +790,7 @@ void selectLvl(int lvl, int points, int cp)
 	speed = 0;
 
 	if(raceLvl == 1) {
+		angle = 0;
 		for(int i=0;i<carsPerLvl[raceLvl - 1];i++)
 		{
 			car[i].restart();
@@ -791,6 +814,7 @@ void selectLvl(int lvl, int points, int cp)
 			trackObjects[i].angle = 45;
 		}
 	} else if(raceLvl == 2) {
+		angle = 0;
 		for(int i=0;i<carsPerLvl[raceLvl - 1];i++)
 		{
 			car[i].restart();
