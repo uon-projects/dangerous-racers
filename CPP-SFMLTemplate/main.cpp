@@ -52,11 +52,15 @@ float turnSpeed=0.05; //represents the turn speed for the cars
 sf::Font font1(zfSFML.loadFont("Assets/fonts/", "big_space", "otf")); //declaring the font that is used by text
 sf::Text inRaceText, inRaceTime, inRaceLap, inRacePlace; //declring all the variables of text type that are used in the game
 
+bool raceStarted; //let us know if the race has started - used only for game screen
+bool raceEnded; //let us know if the race has ended - used only for game screen
+bool readyToRace = false; //let us know if the user has chose to start the race - used only for game screen
+bool outOfTrack = false; //let us know if the user car has exited the racetrack
+
+//clock variables that makes the game more realistic
 sf::Clock inGameClock;
 
-bool raceStarted, raceEnded, outOfTrack = false;
-bool readyToRace = false;
-
+//array that stores the points for the 1st racetrack
 int pLvl1[pointsLvl1][2] = {
 	261, 825,
 	396, 436,
@@ -72,6 +76,7 @@ int pLvl1[pointsLvl1][2] = {
 	261, 2324
 };
 
+//array that stores the points for the 2nd racetrack
 int pLvl2[pointsLvl2][2] = {
 	221, 747,
 	364, 323,
@@ -97,6 +102,7 @@ int pLvl2[pointsLvl2][2] = {
 	260, 1310
 };
 
+//array that stores the points for the 3rd racetrack
 int pLvl3[pointsLvl3][2] = {
 	1451, 1930,
 	785, 2013,
@@ -146,24 +152,7 @@ int pLvl3[pointsLvl3][2] = {
 	2203, 1925
 };
 
-int lapsPerLvl[3] = {
-	//lvl 1
-	9,
-	//lvl 2
-	12,
-	//lvl 3
-	15
-};
-
-int carsPerLvl[3] = {
-	//lvl 1
-	4,
-	//lvl 2
-	6,
-	//lvl 3
-	6
-};
-
+//array that stores the checkpoints for the 1st racetrack
 int checkpointsLvl1[cpLvl1][4] = {
 	149, 802, 507, 802,
 	915, 97, 915, 454,
@@ -174,6 +163,7 @@ int checkpointsLvl1[cpLvl1][4] = {
 	149, 1748, 507, 1748
 };
 
+//array that stores the checkpoints for the 2nd racetrack
 int checkpointsLvl2[cpLvl2][4] = {
 	118, 759, 477, 759,
 	800, 133, 800, 491,
@@ -186,6 +176,7 @@ int checkpointsLvl2[cpLvl2][4] = {
 	118, 1140, 476, 1140
 };
 
+//array that stores the checkpoints for the 3rd racetrack
 int checkpointsLvl3[cpLvl3][4] = {
 	740, 1749, 740, 2105,
 	88, 1473, 446, 1473,
@@ -200,6 +191,26 @@ int checkpointsLvl3[cpLvl3][4] = {
 	3149, 1657, 3269, 1313,
 	3014, 1749, 3014, 2105,
 	2118, 1749, 2118, 2105
+};
+
+//array that stores how many laps are for each lvl - racetrack
+int lapsPerLvl[3] = {
+	//lvl 1
+	9,
+	//lvl 2
+	12,
+	//lvl 3
+	15
+};
+
+//array that stores how many cars are for each lvl - racetrack
+int carsPerLvl[3] = {
+	//lvl 1
+	4,
+	//lvl 2
+	6,
+	//lvl 3
+	6
 };
 
 //declaring the struct of objects
