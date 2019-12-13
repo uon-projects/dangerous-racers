@@ -44,10 +44,10 @@ int offsetX=0, offsetY=0; //variables that helps to create a movable background 
 int raceFinishedTime, raceFinishedPlace; //variables that store the time and place of the last race
 int userCar; //variable that represents the racing car while in race
 
-float speed=0;
-float angle=0;
-float maxSpeed=15;
-float turnSpeed=0.05;
+float speed=0; //represents the user car speed
+float angle=0; //represents the user car angle
+float maxSpeed=15; //represents the maxSpeed for each car
+float turnSpeed=0.05; //represents the turn speed for the cars
 
 sf::Font font1(zfSFML.loadFont("Assets/fonts/", "big_space", "otf"));
 
