@@ -12,6 +12,52 @@ using namespace zeoFlow;
 using namespace Collision;
 using namespace sf;
 
+ZeoFlow_SFML zfSFML; //declaring a variable of ZeoFlow_SFML type - help us to draw the images easier
+MD2 btnLvl; //declaring a variable of MD2 type - help us to draw the buttons
+
+RenderWindow window(VideoMode(800, 500), "Dangerous Racing"); //the game screen
+
+//declaring the value for each screen that can be found in game
+const int SCENE_SPLASH_SCREEN = 0;
+const int SCENE_GAME_MENU_SCREEN = 1;
+const int SCENE_GAME_SCREEN = 2;
+const int SCENE_PICK_CAR_SCREEN = 3;
+const int SCENE_SELECT_LVL = 4;
+const int SCENE_HOW_TO = 5;
+//variables that represents how many points for automated driving are for each level
+const int pointsLvl1 = 12; //this is for lvl 1
+const int pointsLvl2 = 22; //this is for lvl 2
+const int pointsLvl3 = 46; //this is for lvl 3
+//variables that represents how many checkpoints are for each racetrack
+const int cpLvl1 = 7; //this is for lvl 1
+const int cpLvl2 = 9; //this is for lvl 2
+const int cpLvl3 = 13; //this is for lvl 3
+//pi constant - helps us to make a smooth turning
+const float pi = 3.1415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170679;
+int currentScreen = SCENE_SPLASH_SCREEN; //this helps us to know what screen to draw
+int levesUnlocked = 1; //here we store how many levels we have unlocked (by default we can play only the 1st one)
+int raceLvl = 1; //this stores the current race
+int pointsPerLvl; //this helps us to know how many points are for the current racetrack
+int cpPerLvl;  //this helps us to know how many checkpoints are for the current racetrack
+int carSelected = 0; //this represents the car selected by the user
+int offsetX=0, offsetY=0; //variables that helps to create a movable background according to the car position on the racetrack
+int raceFinishedTime, raceFinishedPlace; //variables that store the time and place of the last race
+int userCar; //variable that represents the racing car while in race
+
+float speed=0;
+float angle=0;
+float maxSpeed=15;
+float turnSpeed=0.05;
+
+sf::Font font1(zfSFML.loadFont("Assets/fonts/", "big_space", "otf"));
+
+sf::Clock inGameClock;
+
+bool raceStarted, raceEnded, outOfTrack = false;
+sf::Text inRaceText, inRaceTime, inRaceLap, inRacePlace;
+sf::Vector2i lastPos;
+bool readyToRace = false;
+
 //declaring the struct of objects
 //struct that stores the sprites for the object that appear on track
 struct TrackObjects
@@ -251,52 +297,6 @@ TracksBackground tracksBackgroundMask[3];
 TrackObjects trackObjects[2];
 CarModels carModels[3];
 Car car[8];
-
-ZeoFlow_SFML zfSFML; //declaring a variable of ZeoFlow_SFML type - help us to draw the images easier
-MD2 btnLvl; //declaring a variable of MD2 type - help us to draw the buttons
-
-RenderWindow window(VideoMode(800, 500), "Dangerous Racing"); //the game screen
-
-//declaring the value for each screen that can be found in game
-const int SCENE_SPLASH_SCREEN = 0;
-const int SCENE_GAME_MENU_SCREEN = 1;
-const int SCENE_GAME_SCREEN = 2;
-const int SCENE_PICK_CAR_SCREEN = 3;
-const int SCENE_SELECT_LVL = 4;
-const int SCENE_HOW_TO = 5;
-//variables that represents how many points for automated driving are for each level
-const int pointsLvl1 = 12; //this is for lvl 1
-const int pointsLvl2 = 22; //this is for lvl 2
-const int pointsLvl3 = 46; //this is for lvl 3
-//variables that represents how many checkpoints are for each racetrack
-const int cpLvl1 = 7; //this is for lvl 1
-const int cpLvl2 = 9; //this is for lvl 2
-const int cpLvl3 = 13; //this is for lvl 3
-//pi constant - helps us to make a smooth turning
-const float pi = 3.1415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170679;
-int currentScreen = SCENE_SPLASH_SCREEN; //this helps us to know what screen to draw
-int levesUnlocked = 1; //here we store how many levels we have unlocked (by default we can play only the 1st one)
-int raceLvl = 1; //this stores the current race
-int pointsPerLvl; //this helps us to know how many points are for the current racetrack
-int cpPerLvl;  //this helps us to know how many checkpoints are for the current racetrack
-int carSelected = 0; //this represents the car selected by the user
-int offsetX=0, offsetY=0; //variables that helps to create a movable background according to the car position on the racetrack
-int raceFinishedTime, raceFinishedPlace; //variables that store the time and place of the last race
-int userCar; //variable that represents the racing car while in race
-
-float speed=0;
-float angle=0;
-float maxSpeed=15;
-float turnSpeed=0.05;
-
-sf::Font font1(zfSFML.loadFont("Assets/fonts/", "big_space", "otf"));
-
-sf::Clock inGameClock;
-
-bool raceStarted, raceEnded, outOfTrack = false;
-sf::Text inRaceText, inRaceTime, inRaceLap, inRacePlace;
-sf::Vector2i lastPos;
-bool readyToRace = false;
 
 int pLvl1[pointsLvl1][2] = {
 	261, 825,
