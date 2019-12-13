@@ -1081,6 +1081,7 @@ void drawCarPickerScreen()
 
 }
 
+//method that draw the 'how to' screen
 void drawHowToScreen()
 {
 
@@ -1120,6 +1121,7 @@ void drawHowToScreen()
 
 }
 
+//method that helps us to initialise the race levels
 void selectLvl(int lvl, int points, int cp)
 {
 	inGameClock.restart();
@@ -1212,6 +1214,7 @@ void selectLvl(int lvl, int points, int cp)
 	}
 }
 
+//method that draw the screen where we can select the levels
 void gameSelectLvl()
 {
 
@@ -1273,6 +1276,7 @@ void gameSelectLvl()
 	}
 }
 
+//method that load the assets that are used in the game
 void loadGameAssets() {
 
 	Sprite bg1 = zfSFML.loadSpriteFromTexture("Assets/", "track_1", "png");
