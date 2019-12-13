@@ -27,7 +27,7 @@ int currentScreen = SCENE_SPLASH_SCREEN;
 int raceLvl = 1;
 const float pi = 3.1415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170679;
 
-int pointsPerLvl, cpPerLvl;
+int pointsPerLvl, cpPerLvl, carSelected = 0;
 
 const int pointsLvl1 = 12;
 const int pointsLvl2 = 22;
@@ -765,7 +765,14 @@ void showGameScreen() {
 			lap = to_string(1);
 		}
 		
-		if(stoi(lap) == lapsPerLvl[raceLvl - 1] + 1) {
+		int carsDestroyed = 0;
+		for(int i=0; i<carsPerLvl[raceLvl - 1] - 1; i++) {
+			if(car[i].health < 0) {
+				carsDestroyed++;
+			}
+		}
+
+		if(stoi(lap) == lapsPerLvl[raceLvl - 1] + 1 || carsDestroyed == carsPerLvl[raceLvl - 1] - 1) {
 			raceEnded = true;
 			raceFinishedTime = inGameClock.getElapsedTime().asSeconds();
 			raceFinishedPlace = userPlace;
@@ -834,6 +841,8 @@ void showGameScreen() {
 		sf::Text inGameExit;
 		inGameExit.setFont(font1);
 		inGameExit.setString("GO BACK");
+		inRaceText.setOutlineColor(sf::Color::Black);
+		inRaceText.setOutlineThickness(3);
 		inGameExit.setPosition(window.getSize().x/2, window.getSize().y/2 + 50);
 		inGameExit.setCharacterSize(26);
 		sf::IntRect btnCharactersRect(inGameExit.getPosition().x - inGameExit.getGlobalBounds().width / 2,
@@ -965,9 +974,13 @@ void selectLvl(int lvl, int points, int cp)
 			} else if(i<4) {
 				car[i].y=1920 + 200;
 			}
-			int carType = rand() % 3;
-			car[i].setCarModel(carModels[carType].carSprite, carType);
 			car[i].carId = i;
+			if(i == userCar) {
+				car[i].setCarModel(carModels[carSelected].carSprite, carSelected);
+			} else {
+				int carType = rand() % 3;
+				car[i].setCarModel(carModels[carType].carSprite, carType);
+			}
 			car[i].currentCheckPoint = cpPerLvl - 1;
 		}
 		Sprite sAmbulance(zfSFML.loadSpriteFromTexture("Assets/", "ambulance", "png"));
@@ -992,9 +1005,13 @@ void selectLvl(int lvl, int points, int cp)
 			} else if(i<6) {
 				car[i].y=1300 + 400;
 			}
-			int carType = rand() % 3;
-			car[i].setCarModel(carModels[carType].carSprite, carType);
 			car[i].carId = i;
+			if(i == userCar) {
+				car[i].setCarModel(carModels[carSelected].carSprite, carSelected);
+			} else {
+				int carType = rand() % 3;
+				car[i].setCarModel(carModels[carType].carSprite, carType);
+			}
 			car[i].currentCheckPoint = cpPerLvl - 1;
 		}
 	} else if(raceLvl == 3) {
@@ -1012,9 +1029,13 @@ void selectLvl(int lvl, int points, int cp)
 			} else if(i<8) {
 				car[i].x=2307 + 800;
 			}
-			int carType = rand() % 3;
-			car[i].setCarModel(carModels[carType].carSprite, carType);
 			car[i].carId = i;
+			if(i == userCar) {
+				car[i].setCarModel(carModels[carSelected].carSprite, carSelected);
+			} else {
+				int carType = rand() % 3;
+				car[i].setCarModel(carModels[carType].carSprite, carType);
+			}
 			car[i].currentCheckPoint = cpPerLvl - 1;
 			car[i].angle = angle;
 		}
