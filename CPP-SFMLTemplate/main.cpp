@@ -501,12 +501,17 @@ void showGameScreen() {
 	if (Keyboard::isKeyPressed(Keyboard::Right)) Right=true;
 	if (Keyboard::isKeyPressed(Keyboard::Down)) Down=true;
 	if (Keyboard::isKeyPressed(Keyboard::Left)) Left=true;
+
+	//THIS KEY IS EXITING THE RACE
+	//even if the game don't have a pause menu, if you want to exit the race you can press the 'E' key
 	if (Keyboard::isKeyPressed(Keyboard::Key::E)) currentScreen = SCENE_GAME_MENU_SCREEN;
 
-	float acc = 0.2, dec = 0.2;
+	float acc = 0.2; //represents the acceleration value for each car
+	float dec = 0.2; //represents the deceleration value for each car
 	
 	srand(time(NULL)); //making sure that every time are generated random numbers
 	
+	//if the player has exited the racetrack than we change the speed
 	if(outOfTrack) {
 		maxSpeed = 1;
 		turnSpeed = 0.01;
@@ -515,6 +520,7 @@ void showGameScreen() {
 		turnSpeed = 0.05;
 	}
 
+	//depending on the keys that the player press we do that action
 	if(outOfTrack && raceStarted && !raceEnded) {
 		if (Up && speed<maxSpeed + rand()%2 + 1) {
 			if (speed < 0) {
@@ -559,14 +565,17 @@ void showGameScreen() {
 		car[userCar].speed = speed;
 		car[userCar].angle = angle;
 	}
-			
-	car[userCar].move();
+	
+	//we are moving the cars
 	for(int i=0;i<carsPerLvl[raceLvl - 1];i++) {
 		if(i != userCar && car[i].health>0) {
 			car[i].move();
+		} else if (i == userCar) {
+			car[i].move();
 		}
 	}
-			
+	
+	
 	for(int i=0;i<carsPerLvl[raceLvl - 1];i++){
 		if(raceEnded && car[i].health>0) {
 			car[i].findTarget();
