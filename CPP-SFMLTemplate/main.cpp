@@ -1,6 +1,7 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include <string>
+#include <fstream>
 #include "ZeoFlow_SFML.h"
 #include "MD2.h"
 #include "Collision.hpp"
@@ -19,10 +20,11 @@ sf::Clock inGameClock;
 const int SCENE_SPLASH_SCREEN = 0;
 const int SCENE_GAME_MENU_SCREEN = 1;
 const int SCENE_GAME_SCREEN = 2;
-const int SCENE_OPTIONS_SCREEN = 3;
+const int SCENE_PICK_CAR_SCREEN = 3;
 const int SCENE_SELECT_LVL = 4;
+const int SCENE_HOW_TO = 5;
 
-int levesUnlocked = 3;
+int levesUnlocked = 1;
 int currentScreen = SCENE_SPLASH_SCREEN;
 int raceLvl = 1;
 const float pi = 3.1415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170679;
@@ -613,18 +615,6 @@ void showGameScreen() {
 		}
 	}
 
-	sf::Vector2i MouseCursorLocation = sf::Mouse::getPosition(window);
-	menuSqr.setPosition(MouseCursorLocation.x, MouseCursorLocation.y);
-	window.draw(menuSqr);
-
-	if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-		if(lastPos.x != MouseCursorLocation.x && lastPos.y != MouseCursorLocation.y) {
-			//cout<<MouseCursorLocation.x + offsetX<<", "<<MouseCursorLocation.y + offsetY<<'\n';
-			lastPos = sf::Mouse::getPosition(window);
-			//currentScreen = SCENE_GAME_MENU_SCREEN;
-		}
-	}
-
 	for(int i=0;i<carsPerLvl[raceLvl - 1];i++)
 	{
 		car[i].sCar.setPosition(car[i].x-offsetX,car[i].y-offsetY);
@@ -759,12 +749,10 @@ void showGameScreen() {
 		}
 
 		string lap;
-		if(car[userCar].lap!=0 && car[userCar].lap>lapsPerLvl[raceLvl - 1]) {
-			lap = to_string(car[userCar].lap);
-		} else if(car[userCar].lap>lapsPerLvl[raceLvl - 1]) {
-			lap = lapsPerLvl[raceLvl - 1];
-		} else {
+		if(car[userCar].lap==0) {
 			lap = to_string(1);
+		} else {
+			lap = to_string(car[userCar].lap);
 		}
 		
 		int carsDestroyed = 0;
@@ -864,53 +852,12 @@ void showGameScreen() {
 
 }
 
-void loadGameAssets() {
-
-	Sprite bg1 = zfSFML.loadSpriteFromTexture("Assets/", "track_1", "png");
-	bg1.setScale(1, 1);
-	tracksBackground[0].backgroundTrack = bg1;
-
-	Sprite bg1Mask = zfSFML.loadSpriteFromTexture("Assets/", "track_1_mask", "png");
-	bg1Mask.setScale(1, 1);
-	tracksBackgroundMask[0].backgroundTrack = bg1Mask;
-
-	Sprite bg2 = zfSFML.loadSpriteFromTexture("Assets/", "track_2", "png");
-	bg2.setScale(1, 1);
-	tracksBackground[1].backgroundTrack = bg2;
-
-	Sprite bg2Mask = zfSFML.loadSpriteFromTexture("Assets/", "track_2_mask", "png");
-	bg2Mask.setScale(1, 1);
-	tracksBackgroundMask[1].backgroundTrack = bg2Mask;
-
-	Sprite bg3 = zfSFML.loadSpriteFromTexture("Assets/", "track_3", "png");
-	bg3.setScale(1, 1);
-	tracksBackground[2].backgroundTrack = bg3;
-
-	Sprite bg3Mask = zfSFML.loadSpriteFromTexture("Assets/", "track_3_mask", "png");
-	bg3Mask.setScale(1, 1);
-	tracksBackgroundMask[2].backgroundTrack = bg3Mask;
-
-	Sprite sCar1(zfSFML.loadSpriteFromTexture("Assets/", "car1", "png"));
-	sCar1.setOrigin(sCar1.getLocalBounds().width/2, sCar1.getLocalBounds().height/2);
-	sCar1.scale(0.7, 0.7);
-	carModels[0].carSprite = sCar1;
-	Sprite sCar2(zfSFML.loadSpriteFromTexture("Assets/", "car2", "png"));
-	sCar2.setOrigin(sCar2.getLocalBounds().width/2, sCar2.getLocalBounds().height/2);
-	sCar2.scale(0.7, 0.7);
-	carModels[1].carSprite = sCar2;
-	Sprite sCar3(zfSFML.loadSpriteFromTexture("Assets/", "car3", "png"));
-	sCar3.setOrigin(sCar3.getLocalBounds().width/2, sCar3.getLocalBounds().height/2);
-	sCar3.scale(0.8, 0.8);
-	carModels[2].carSprite = sCar3;
-
-}
-
 bool isLvlUnlocked(int lvl)
 {
 	return lvl <= levesUnlocked;
 }
 
-void gameMenuScreen()
+void drawGameMenuScreen()
 {
 
 	sf::RectangleShape selectLvlBg;
@@ -937,7 +884,7 @@ void gameMenuScreen()
 	window.draw(btnTxt);
 	btnLvl.drawBtn(window, "SELECT CAR", 30, font1);
 	if(btnLvl.btnClicked(window)) {
-
+		currentScreen = SCENE_PICK_CAR_SCREEN;
 	}
 
 	btnLvl.setLocation(window.getSize().x/2, window.getSize().y/2 + 100);
@@ -947,8 +894,122 @@ void gameMenuScreen()
 	window.draw(btnTxt);
 	btnLvl.drawBtn(window, "HOW TO PLAY", 30, font1);
 	if(btnLvl.btnClicked(window)) {
-
+		currentScreen = SCENE_HOW_TO;
 	}
+
+}
+
+void drawCarPickerScreen()
+{
+
+	sf::RectangleShape selectLvlBg;
+	selectLvlBg.setSize(sf::Vector2f(window.getSize().x, window.getSize().y));
+	selectLvlBg.setFillColor(sf::Color(43, 43, 43));
+	window.draw(selectLvlBg);
+
+	sf::Text inGameExit;
+	inGameExit.setFont(font1);
+	inGameExit.setString("BACK");
+	inGameExit.setPosition(window.getSize().x - 100, 50);
+	inGameExit.setCharacterSize(26);
+	sf::IntRect btnCharactersRect(inGameExit.getPosition().x - inGameExit.getGlobalBounds().width / 2,
+		inGameExit.getPosition().y, inGameExit.getGlobalBounds().width, inGameExit.getGlobalBounds().height * 2);
+	if (btnCharactersRect.contains(sf::Mouse::getPosition(window))) {
+		if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+			currentScreen = SCENE_GAME_MENU_SCREEN;
+		}
+		inGameExit.setFillColor(sf::Color(255, 255, 255));
+	} else {
+		inGameExit.setFillColor(sf::Color(255,224,178));
+	}
+	inGameExit.setOrigin(inGameExit.getGlobalBounds().width/2, 0);
+	window.draw(inGameExit);
+
+	float multiplyBy;
+	if(carSelected == 0) {
+		multiplyBy = 1;
+	} else if(carSelected == 1) {
+		multiplyBy = 3.5;
+	} else if(carSelected == 2) {
+		multiplyBy = 6;
+	}
+	
+	MD2 md2;
+	sf::RectangleShape selectedCar;
+	selectedCar.setSize(sf::Vector2f(90, 10));
+	selectedCar.setFillColor(sf::Color(156, 39, 176));
+	selectedCar.setPosition(window.getSize().x/9 * multiplyBy, 370);
+	window.draw(selectedCar);
+
+	Sprite sCar1(zfSFML.loadSpriteFromTexture("Assets/", "car1", "png"));
+	sCar1.setOrigin(sCar1.getLocalBounds().width/2, sCar1.getLocalBounds().height/2);
+	sCar1.scale(1, 1);
+	sCar1.setRotation(45);
+	sCar1.setPosition(window.getSize().x/9 * 2, window.getSize().y/2);
+	if(md2.imgCLicked(window, sCar1)) {
+		carSelected = 0;
+	}
+	
+	Sprite sCar2(zfSFML.loadSpriteFromTexture("Assets/", "car2", "png"));
+	sCar2.setOrigin(sCar2.getLocalBounds().width/2, sCar2.getLocalBounds().height/2);
+	sCar2.scale(0.85, 0.85);
+	sCar2.setRotation(45);
+	sCar2.setPosition(window.getSize().x/9 * 4.5, window.getSize().y/2);
+	if(md2.imgCLicked(window, sCar2) && levesUnlocked>=2) {
+		carSelected = 1;
+	}
+
+	Sprite sCar3(zfSFML.loadSpriteFromTexture("Assets/", "car3", "png"));
+	sCar3.setOrigin(sCar3.getLocalBounds().width/2, sCar3.getLocalBounds().height/2);
+	sCar3.scale(0.85, 0.85);
+	sCar3.setRotation(45);
+	sCar3.setPosition(window.getSize().x/9 * 7, window.getSize().y/2);
+	if(md2.imgCLicked(window, sCar3) && levesUnlocked>=3) {
+		carSelected = 2;
+	}
+	
+	window.draw(sCar1);
+	window.draw(sCar2);
+	window.draw(sCar3);
+
+}
+
+void drawHowToScreen()
+{
+
+	sf::RectangleShape selectLvlBg;
+	selectLvlBg.setSize(sf::Vector2f(window.getSize().x, window.getSize().y));
+	selectLvlBg.setFillColor(sf::Color(43, 43, 43));
+	window.draw(selectLvlBg);
+
+	sf::Text inGameExit;
+	inGameExit.setFont(font1);
+	inGameExit.setString("BACK");
+	inGameExit.setPosition(window.getSize().x - 100, 10);
+	inGameExit.setCharacterSize(26);
+	sf::IntRect btnCharactersRect(inGameExit.getPosition().x - inGameExit.getGlobalBounds().width / 2,
+		inGameExit.getPosition().y, inGameExit.getGlobalBounds().width, inGameExit.getGlobalBounds().height * 2);
+	if (btnCharactersRect.contains(sf::Mouse::getPosition(window))) {
+		if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+			currentScreen = SCENE_GAME_MENU_SCREEN;
+		}
+		inGameExit.setFillColor(sf::Color(255, 255, 255));
+	} else {
+		inGameExit.setFillColor(sf::Color(255,224,178));
+	}
+	inGameExit.setOrigin(inGameExit.getGlobalBounds().width/2, 0);
+	window.draw(inGameExit);
+
+	ifstream howTo("howTo.txt");
+	string content((istreambuf_iterator<char>(howTo)), (istreambuf_iterator<char>()));
+	inGameExit.setString(content);
+	inGameExit.setPosition(50, 50);
+	inGameExit.setCharacterSize(16);
+	inGameExit.setOutlineColor(sf::Color::Black);
+	inGameExit.setOutlineThickness(1);
+	inGameExit.setFillColor(sf::Color(198, 198, 198));
+	window.draw(inGameExit);
+	inGameExit.setOutlineThickness(0);
 
 }
 
@@ -1105,6 +1166,47 @@ void gameSelectLvl()
 	}
 }
 
+void loadGameAssets() {
+
+	Sprite bg1 = zfSFML.loadSpriteFromTexture("Assets/", "track_1", "png");
+	bg1.setScale(1, 1);
+	tracksBackground[0].backgroundTrack = bg1;
+
+	Sprite bg1Mask = zfSFML.loadSpriteFromTexture("Assets/", "track_1_mask", "png");
+	bg1Mask.setScale(1, 1);
+	tracksBackgroundMask[0].backgroundTrack = bg1Mask;
+
+	Sprite bg2 = zfSFML.loadSpriteFromTexture("Assets/", "track_2", "png");
+	bg2.setScale(1, 1);
+	tracksBackground[1].backgroundTrack = bg2;
+
+	Sprite bg2Mask = zfSFML.loadSpriteFromTexture("Assets/", "track_2_mask", "png");
+	bg2Mask.setScale(1, 1);
+	tracksBackgroundMask[1].backgroundTrack = bg2Mask;
+
+	Sprite bg3 = zfSFML.loadSpriteFromTexture("Assets/", "track_3", "png");
+	bg3.setScale(1, 1);
+	tracksBackground[2].backgroundTrack = bg3;
+
+	Sprite bg3Mask = zfSFML.loadSpriteFromTexture("Assets/", "track_3_mask", "png");
+	bg3Mask.setScale(1, 1);
+	tracksBackgroundMask[2].backgroundTrack = bg3Mask;
+
+	Sprite sCar1(zfSFML.loadSpriteFromTexture("Assets/", "car1", "png"));
+	sCar1.setOrigin(sCar1.getLocalBounds().width/2, sCar1.getLocalBounds().height/2);
+	sCar1.scale(0.8, 0.8);
+	carModels[0].carSprite = sCar1;
+	Sprite sCar2(zfSFML.loadSpriteFromTexture("Assets/", "car2", "png"));
+	sCar2.setOrigin(sCar2.getLocalBounds().width/2, sCar2.getLocalBounds().height/2);
+	sCar2.scale(0.7, 0.7);
+	carModels[1].carSprite = sCar2;
+	Sprite sCar3(zfSFML.loadSpriteFromTexture("Assets/", "car3", "png"));
+	sCar3.setOrigin(sCar3.getLocalBounds().width/2, sCar3.getLocalBounds().height/2);
+	sCar3.scale(0.7, 0.7);
+	carModels[2].carSprite = sCar3;
+
+}
+
 int main()
 {
 	window.setFramerateLimit(60);
@@ -1157,7 +1259,7 @@ int main()
 			}
 		} else if(currentScreen == SCENE_GAME_MENU_SCREEN) {
 
-			gameMenuScreen();
+			drawGameMenuScreen();
 
 		} else if(currentScreen == SCENE_GAME_SCREEN) {
 
@@ -1167,11 +1269,20 @@ int main()
 
 			gameSelectLvl();
 
+		} else if(currentScreen == SCENE_PICK_CAR_SCREEN) {
+
+			drawCarPickerScreen();
+
+		} else if(currentScreen == SCENE_HOW_TO) {
+
+			drawHowToScreen();
+
 		}
         window.display();
 	}
 
-	getchar();
+	//for closing the debug window when the game window is closed
+	//getchar();
 
 	return 0;
 }
