@@ -51,16 +51,18 @@ struct Car
 	Sprite crashedMask; //an overlay of the car's sprite - to make the car to looks like destroyed
 	
 	//initialise car struct
-	Car() {
+	Car()
+	{
 
 		//invoke the restart methode to initialise the data about the cars
 		restart();
 
 	}
 
-	//restart methode - initialise the variables for being able to race more time in the same session
+	//restart method - initialise the variables for being able to race more time in the same session
 	//setting the speed, angle, n and lap
-	void restart() {
+	void restart()
+	{
 		speed = 0;
 		angle = 0;
 		n = 0;
@@ -71,7 +73,8 @@ struct Car
 	// - the car sprite
 	// - the car mask
 	// - the car health by model
-	void setCarModel(sf::Sprite carSprite, int carModel) {
+	void setCarModel(sf::Sprite carSprite, int carModel)
+	{
 
 		//setting the car sprite
 		sCar = carSprite;
@@ -92,7 +95,7 @@ struct Car
 
 	}
 
-	//methode that helps us to calculate the user car place
+	//method that helps us to calculate the user car place
 	//we are able to calculate the place with the help of the checkpoints
 	int totalCheckPoints()
 	{
@@ -100,18 +103,22 @@ struct Car
 		return carPlace;
 	}
 	
+	//method that increase the car speed
 	void increaseSpeed()
 	{
-		srand(time(NULL));
+		srand(time(NULL)); //making sure that every time are generated random numbers
 		speed = speed - rand()%10/10 * 1.5 + rand()%10/10 * 3;
 	}
 	
+	//method that decrease the car speed
 	void decreaseSpeed()
 	{
-		srand(time(NULL));
+		srand(time(NULL)); //making sure that every time are generated random numbers
 		speed = speed - rand()%10/10 * 3;
 	}
 	
+	//method that checks if the car passed a new checkpoint
+	//there are different checkpoints depending on the racetrack
 	void checkCheckpoint()
 	{
 		if(raceLvl == 1) {
@@ -174,6 +181,7 @@ struct Car
 		}
 	}
 
+	//method that moves the car
 	void move()
 	{
 		x += sin(angle) * speed;
@@ -200,6 +208,10 @@ struct Car
 		checkCheckpoint();
 	}
 
+	//method that drives automatically the cars on the racetrack
+	//this method is used for the computer-controlled cars only
+	//and for the user car when the race ends
+	//depending on the race level we have different points that helps us to make the car to move automatically
 	void findTarget()
 	{
 		float tx, ty;
@@ -244,18 +256,27 @@ const int SCENE_GAME_SCREEN = 2;
 const int SCENE_PICK_CAR_SCREEN = 3;
 const int SCENE_SELECT_LVL = 4;
 const int SCENE_HOW_TO = 5;
-
+//variables that represents how many points for automated driving are for each level
+const int pointsLvl1 = 12; //this is for lvl 1
+const int pointsLvl2 = 22; //this is for lvl 2
+const int pointsLvl3 = 46; //this is for lvl 3
+//variables that represents how many checkpoints are for each racetrack
+const int cpLvl1 = 7; //this is for lvl 1
+const int cpLvl2 = 9; //this is for lvl 2
+const int cpLvl3 = 13; //this is for lvl 3
+//pi constant - helps us to make a smooth turning
+const float pi = 3.1415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170679;
 int levesUnlocked = 1;
 int currentScreen = SCENE_SPLASH_SCREEN;
 int raceLvl = 1;
-const float pi = 3.1415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170679;
-
-int pointsPerLvl, cpPerLvl, carSelected = 0;
+int pointsPerLvl;
+int cpPerLvl;
+int carSelected = 0;
+int offsetX=0, offsetY=0;
+int raceFinishedTime, raceFinishedPlace;
+int userCar;
 
 sf::Clock inGameClock;
-const int pointsLvl1 = 12;
-const int pointsLvl2 = 22;
-const int pointsLvl3 = 46;
 TracksBackground tracksBackground[3];
 TracksBackground tracksBackgroundMask[3];
 TrackObjects trackObjects[2];
@@ -267,16 +288,10 @@ MD2 btnLvl;
 float speed=0,angle=0;
 float maxSpeed=15;
 float turnSpeed=0.05;
-int offsetX=0,offsetY=0;
 bool raceStarted, raceEnded, outOfTrack = false;
 sf::Text inRaceText, inRaceTime, inRaceLap, inRacePlace;
 sf::Vector2i lastPos;
 bool readyToRace = false;
-int raceFinishedTime, raceFinishedPlace;
-int userCar;
-const int cpLvl1 = 7;
-const int cpLvl2 = 9;
-const int cpLvl3 = 13;
 
 int pLvl1[pointsLvl1][2] = {
 	261, 825,
@@ -468,7 +483,7 @@ void showGameScreen() {
 
 	float acc = 0.2, dec = 0.2;
 	
-	srand(time(NULL));
+	srand(time(NULL)); //making sure that every time are generated random numbers
 	
 	if(outOfTrack) {
 		maxSpeed = 1;
@@ -538,7 +553,7 @@ void showGameScreen() {
 		}
 	}
 
-	srand(time(NULL));
+	srand(time(NULL)); //making sure that every time are generated random numbers
 	for(int i=0;i<carsPerLvl[raceLvl - 1];i++)
 		for(int j=0;j<carsPerLvl[raceLvl - 1];j++) {
 			int dx=0, dy=0;
@@ -1056,7 +1071,7 @@ void selectLvl(int lvl, int points, int cp)
 	readyToRace = false;
 	raceEnded = false;
 
-	srand(time(NULL));
+	srand(time(NULL)); //making sure that every time are generated random numbers
 	if(raceLvl == 1) {
 		angle = 0;
 		for(int i=0;i<carsPerLvl[raceLvl - 1];i++)
