@@ -245,7 +245,15 @@ struct CarModels
 	}
 };
 
+//declaring the arrays that stores items that are of struct data type
+TracksBackground tracksBackground[3];
+TracksBackground tracksBackgroundMask[3];
+TrackObjects trackObjects[2];
+CarModels carModels[3];
+Car car[8];
+
 ZeoFlow_SFML zfSFML; //declaring a variable of ZeoFlow_SFML type - help us to draw the images easier
+MD2 btnLvl; //declaring a variable of MD2 type - help us to draw the buttons
 
 RenderWindow window(VideoMode(800, 500), "Dangerous Racing"); //the game screen
 
@@ -266,28 +274,25 @@ const int cpLvl2 = 9; //this is for lvl 2
 const int cpLvl3 = 13; //this is for lvl 3
 //pi constant - helps us to make a smooth turning
 const float pi = 3.1415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170679;
-int levesUnlocked = 1;
-int currentScreen = SCENE_SPLASH_SCREEN;
-int raceLvl = 1;
-int pointsPerLvl;
-int cpPerLvl;
-int carSelected = 0;
-int offsetX=0, offsetY=0;
-int raceFinishedTime, raceFinishedPlace;
-int userCar;
+int currentScreen = SCENE_SPLASH_SCREEN; //this helps us to know what screen to draw
+int levesUnlocked = 1; //here we store how many levels we have unlocked (by default we can play only the 1st one)
+int raceLvl = 1; //this stores the current race
+int pointsPerLvl; //this helps us to know how many points are for the current racetrack
+int cpPerLvl;  //this helps us to know how many checkpoints are for the current racetrack
+int carSelected = 0; //this represents the car selected by the user
+int offsetX=0, offsetY=0; //variables that helps to create a movable background according to the car position on the racetrack
+int raceFinishedTime, raceFinishedPlace; //variables that store the time and place of the last race
+int userCar; //variable that represents the racing car while in race
 
-sf::Clock inGameClock;
-TracksBackground tracksBackground[3];
-TracksBackground tracksBackgroundMask[3];
-TrackObjects trackObjects[2];
-CarModels carModels[3];
-Car car[8];
-sf::Font font1(zfSFML.loadFont("Assets/fonts/", "big_space", "otf"));
-MD2 btnLvl;
-
-float speed=0,angle=0;
+float speed=0;
+float angle=0;
 float maxSpeed=15;
 float turnSpeed=0.05;
+
+sf::Font font1(zfSFML.loadFont("Assets/fonts/", "big_space", "otf"));
+
+sf::Clock inGameClock;
+
 bool raceStarted, raceEnded, outOfTrack = false;
 sf::Text inRaceText, inRaceTime, inRaceLap, inRacePlace;
 sf::Vector2i lastPos;
