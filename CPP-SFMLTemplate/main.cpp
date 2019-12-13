@@ -575,7 +575,8 @@ void showGameScreen() {
 		}
 	}
 	
-	
+	//we are making the automated-cars to follow the right direction on the racetrack
+	//in case that the race has ended than the player car drives automatically
 	for(int i=0;i<carsPerLvl[raceLvl - 1];i++){
 		if(raceEnded && car[i].health>0) {
 			car[i].findTarget();
@@ -585,6 +586,9 @@ void showGameScreen() {
 	}
 
 	srand(time(NULL)); //making sure that every time are generated random numbers
+	//here we are checking for the collision
+	//I am checking for the collision between cars using the pixel coliision detection
+	//if the user car crash into other car than we give damage to that car
 	for(int i=0;i<carsPerLvl[raceLvl - 1];i++)
 		for(int j=0;j<carsPerLvl[raceLvl - 1];j++) {
 			int dx=0, dy=0;
@@ -601,6 +605,7 @@ void showGameScreen() {
 			}
 		}
 
+	//here we are checking for the collision with the objects that are outside the track
 	for(int i=0; i<2; i++) {
 		int dx=0, dy=0;
 		if (PixelPerfectDetection(car[userCar].sCar, trackObjects[i].sprite)) {
@@ -612,6 +617,9 @@ void showGameScreen() {
 			}
 		}
 	}
+
+	//if the race has started than we increase the automated-cars speed regularly (until it reaches the maximum speed)
+	//otherwise we keep the speed for all the cars the same
 	if(raceStarted) {
 		for(int i=0; i<carsPerLvl[raceLvl - 1]; i++) {
 			if(i != userCar && car[i].speed < maxSpeed + carsPerLvl[raceLvl - 1] - i) {
@@ -628,6 +636,8 @@ void showGameScreen() {
 		}
 	}
 	
+	//depending on the race lvl we change the values that centralise the car
+	//this helps us to make a moving racetrack
 	if(raceLvl == 1) {
 		if (car[userCar].x>window.getSize().x/2 && car[userCar].x<1330) {
 			offsetX = car[userCar].x-window.getSize().x/2;
@@ -653,22 +663,27 @@ void showGameScreen() {
 		}
 	}
 	
+	//drawing the racetrack
 	tracksBackground[raceLvl - 1].backgroundTrack.setColor(sf::Color(255, 255, 255, 255));
 	tracksBackground[raceLvl - 1].backgroundTrack.setScale(1, 1);
 	tracksBackground[raceLvl - 1].backgroundTrack.setPosition(-offsetX,-offsetY);
 	window.draw(tracksBackground[raceLvl - 1].backgroundTrack);
 	
+	//setting the racetrack mask - this represents the outside of the racetrack
 	tracksBackgroundMask[raceLvl - 1].backgroundTrack.setPosition(-offsetX,-offsetY);
+	//this statement recognise if the player has exited the racetrack or not
 	if (!raceEnded && raceStarted && PixelPerfectDetection(car[userCar].sCar, tracksBackgroundMask[raceLvl - 1].backgroundTrack)) {
 		outOfTrack = true;
 	} else {
 		outOfTrack = false;
 	}
 
+	//declaring the square that shows us where the checkpoints are
 	sf::RectangleShape menuSqr;
 	menuSqr.setSize(sf::Vector2f(20, 20));
 	menuSqr.setOrigin(10, 10);
 	menuSqr.setFillColor(sf::Color(255,193,7));
+	//deopending on the race level we draw the checkpoints
 	if(raceLvl == 1) {
 		for(int i=0; i<cpLvl1; i++) {
 			menuSqr.setPosition(checkpointsLvl1[i][0]-offsetX, checkpointsLvl1[i][1]-offsetY);
@@ -692,6 +707,8 @@ void showGameScreen() {
 		}
 	}
 
+	//drawing the cars on the track
+	//for the automated cars we draw the health bar (only if the race didn't ended)
 	for(int i=0;i<carsPerLvl[raceLvl - 1];i++)
 	{
 		car[i].sCar.setPosition(car[i].x-offsetX,car[i].y-offsetY);
@@ -707,6 +724,7 @@ void showGameScreen() {
 		}
 	}
 	
+	//depending on the race level we draw the objects outside the racetrack
 	if(raceLvl == 1) {
 		for(int i=0; i<2; i++) 
 		{
@@ -716,6 +734,7 @@ void showGameScreen() {
 		}
 	}
 	
+	//we are getting the player place
 	int userPlace = 1;
 	for(int i=0; i<carsPerLvl[raceLvl - 1]; i++) {
 		if(car[i].totalCheckPoints() > car[userCar].totalCheckPoints()) {
@@ -723,6 +742,11 @@ void showGameScreen() {
 		}
 	}
 	
+	//depending on the current in-game event we draw some custom items
+	//for instance the screen that asks you if you are ready
+	//the reverse countdown
+	//in-race info and mini-map
+	//the end screen
 	if(!readyToRace) {
 		inRaceText.setString("READY?");
 		inRaceText.setFont(font1);
@@ -929,14 +953,17 @@ void showGameScreen() {
 
 }
 
+//method that tells us if a racetrack is unlocked
 bool isLvlUnlocked(int lvl)
 {
 	return lvl <= levesUnlocked;
 }
 
+//method that draw the game menu screen
 void drawGameMenuScreen()
 {
 
+	//declaring, making and drawing the background
 	sf::RectangleShape selectLvlBg;
 	selectLvlBg.setSize(sf::Vector2f(window.getSize().x, window.getSize().y));
 	selectLvlBg.setFillColor(sf::Color(43, 43, 43));
@@ -944,6 +971,7 @@ void drawGameMenuScreen()
 	
 	sf::Text btnTxt;
 
+	//creating the buttons that appear in the menu
 	btnLvl.setLocation(window.getSize().x/2, window.getSize().y/2 - 100);
 	btnLvl.setUnlocked(true);
 	btnTxt = btnLvl.drawBtnString("PLAY", 30);
@@ -976,9 +1004,11 @@ void drawGameMenuScreen()
 
 }
 
+//method that draw the screen where we can select the cars
 void drawCarPickerScreen()
 {
 
+	//declaring, making and drawing the background
 	sf::RectangleShape selectLvlBg;
 	selectLvlBg.setSize(sf::Vector2f(window.getSize().x, window.getSize().y));
 	selectLvlBg.setFillColor(sf::Color(43, 43, 43));
