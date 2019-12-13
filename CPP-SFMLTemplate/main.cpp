@@ -12,6 +12,8 @@ using namespace zeoFlow;
 using namespace Collision;
 using namespace sf;
 
+//declaring the struct of objects
+//struct that stores the sprites for the object that appear on track
 struct TrackObjects
 {
 	float x, y, angle;
@@ -22,6 +24,7 @@ struct TrackObjects
 	}
 };
 
+//struct that stores the sprites for the racetracks
 struct TracksBackground
 {
 	Sprite backgroundTrack;
@@ -31,21 +34,54 @@ struct TracksBackground
 	}
 };
 
+//struct that stores all the data about the cars
 struct Car
 {
-	float x,y,speed,angle;
-	int carId, currentCheckPoint, lap, n;
-	int health, maxHealth;
-	Sprite sCar, crashedMask;
+
+	float x,y; //the x and y coordinates of the car
+	float speed; //the speed of the car
+	float angle; //the angle of the car
+	int carId; //the card id - must be unique
+	int currentCheckPoint; //the current checkpoint for each car
+	int lap; //current lap for every car
+	int n; //helps to loacte the next target - checkpoint
+	int health; //current health of the car
+	int maxHealth; //max health of the car - depends by the vehicle model
+	Sprite sCar; //the car sprite
+	Sprite crashedMask; //an overlay of the car's sprite - to make the car to looks like destroyed
 	
+	//initialise car struct
 	Car() {
+
+		//invoke the restart methode to initialise the data about the cars
 		restart();
+
 	}
 
+	//restart methode - initialise the variables for being able to race more time in the same session
+	//setting the speed, angle, n and lap
+	void restart() {
+		speed = 0;
+		angle = 0;
+		n = 0;
+		lap = 0;
+	}
+
+	//method that sets the car sprites & health
+	// - the car sprite
+	// - the car mask
+	// - the car health by model
 	void setCarModel(sf::Sprite carSprite, int carModel) {
+
+		//setting the car sprite
 		sCar = carSprite;
+
+		//setting the color overlay for the sprite
+		//the color used is black with tranparency
 		carSprite.setColor(sf::Color(0, 0, 0, 180));
 		crashedMask = carSprite;
+
+		//depending on the car model, we set the health
 		if(carModel == 0) {
 			health = maxHealth = 300;
 		} else if(carModel == 1) {
@@ -53,16 +89,11 @@ struct Car
 		} else if(carModel == 2) {
 			health = maxHealth = 400;
 		}
+
 	}
 
-	void restart() {
-		speed = 0;
-		angle = 0;
-		n = 0;
-		health = 200;
-		lap = 0;
-	}
-
+	//methode that helps us to calculate the user car place
+	//we are able to calculate the place with the help of the checkpoints
 	int totalCheckPoints()
 	{
 		int carPlace = lap * cpPerLvl + currentCheckPoint;
@@ -192,6 +223,7 @@ struct Car
 	}
 };
 
+//struct that stores the sprites for each car model
 struct CarModels
 {
 	Sprite carSprite;
