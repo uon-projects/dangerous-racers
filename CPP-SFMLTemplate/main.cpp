@@ -1328,21 +1328,23 @@ int main()
 	icon.loadFromFile("Assets/zeoflow_logo.png");
 	window.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
 	
-	Sprite zeoFlowSprite(zfSFML.loadSpriteFromTexture("Assets/", "zeoflow_logo", "png"));
-
-	Clock clock;
-	int clockState = 0;
+	loadGameAssets(); //loading the assets that are mainly used in the game
 	
-	RectangleShape splashScreenBg;
-	splashScreenBg.setSize(Vector2f(window.getSize().x, window.getSize().y));
-	Color color(16, 16, 16);
-	splashScreenBg.setFillColor(color);
-	
-	loadGameAssets();
+	//splash screen assets
+	Sprite zeoFlowSprite(zfSFML.loadSpriteFromTexture("Assets/", "zeoflow_logo", "png")); //the zeoflow logo - for splash screen
+	RectangleShape splashScreenBg; //declaring the shape that fill the background
+	splashScreenBg.setSize(Vector2f(window.getSize().x, window.getSize().y)); //set the size
+	Color color(16, 16, 16); //create a new color
+	splashScreenBg.setFillColor(color); //set the background color
 
+	Clock clock; //declaring the clock that helps us to change the splash screen
+	int clockState = 0; //helps us to reset the in-game clock at the first launch
+
+	//the loop that draws the game
     while (window.isOpen())
     {
 		Event event;
+		//the loop that checks for different inputs
         while (window.pollEvent(event))
         {
 			if (event.type == Event::Closed || event.key.code == Keyboard::Escape)
@@ -1351,16 +1353,19 @@ int main()
 			}
 		}
 
+		//clear the previous frame window and draw the current frame window
         window.clear();
 
 		if (clockState == 0)
 		{
+			//first game launch - reset the clock
 			clock.restart();
 			clockState++;
 		}
 
 		if (currentScreen == SCENE_SPLASH_SCREEN)
 		{
+			//show the splash screen
 			float sec = clock.getElapsedTime().asSeconds();
 			if (sec < 2.0)
 			{
@@ -1371,30 +1376,38 @@ int main()
 			} 
 			else
 			{
+				//after 2 seconds make the splash screen to dissapear
 				clock.restart();
 				currentScreen = SCENE_GAME_MENU_SCREEN;
 			}
 		} else if(currentScreen == SCENE_GAME_MENU_SCREEN) {
-
+			
+			//draw the game menu screen
 			drawGameMenuScreen();
 
 		} else if(currentScreen == SCENE_GAME_SCREEN) {
-
+			
+			//draw the game screen
 			showGameScreen();
 
 		} else if(currentScreen == SCENE_SELECT_LVL) {
-
+			
+			//draw the select lvl screen
 			gameSelectLvl();
 
 		} else if(currentScreen == SCENE_PICK_CAR_SCREEN) {
-
+			
+			//draw the car pick screen
 			drawCarPickerScreen();
 
 		} else if(currentScreen == SCENE_HOW_TO) {
-
+			
+			//draw the how-to screen
 			drawHowToScreen();
 
 		}
+
+		//display the current frame
         window.display();
 	}
 
