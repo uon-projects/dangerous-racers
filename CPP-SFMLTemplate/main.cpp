@@ -22,7 +22,7 @@ const int SCENE_GAME_SCREEN = 2;
 const int SCENE_OPTIONS_SCREEN = 3;
 const int SCENE_SELECT_LVL = 4;
 
-int levesUnlocked = 1;
+int levesUnlocked = 3;
 int currentScreen = SCENE_SPLASH_SCREEN;
 int raceLvl = 1;
 const float pi = 3.1415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170679;
@@ -560,7 +560,7 @@ void showGameScreen() {
 		if (car[userCar].x>window.getSize().x/2 && car[userCar].x<1705) {
 			offsetX = car[userCar].x-window.getSize().x/2;
 		}
-		if (car[userCar].y>window.getSize().y/2 && car[userCar].y<2300) {
+		if (car[userCar].y>window.getSize().y/2 && car[userCar].y<2290) {
 			offsetY = car[userCar].y-window.getSize().y/2;
 		}
 	} else if(raceLvl == 3) {
@@ -759,8 +759,10 @@ void showGameScreen() {
 		}
 
 		string lap;
-		if(car[userCar].lap!=0) {
+		if(car[userCar].lap!=0 && car[userCar].lap>lapsPerLvl[raceLvl - 1]) {
 			lap = to_string(car[userCar].lap);
+		} else if(car[userCar].lap>lapsPerLvl[raceLvl - 1]) {
+			lap = lapsPerLvl[raceLvl - 1];
 		} else {
 			lap = to_string(1);
 		}
