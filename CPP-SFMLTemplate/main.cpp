@@ -1320,7 +1320,13 @@ void loadGameAssets() {
 
 int main()
 {
+	//setting the window frame limit - 60
 	window.setFramerateLimit(60);
+
+	//setting the game window icon
+	sf::Image icon;
+	icon.loadFromFile("Assets/zeoflow_logo.png");
+	window.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
 	
 	Sprite zeoFlowSprite(zfSFML.loadSpriteFromTexture("Assets/", "zeoflow_logo", "png"));
 
