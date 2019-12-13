@@ -453,9 +453,11 @@ TrackObjects trackObjects[2];
 CarModels carModels[3];
 Car car[8];
 
+//method that draws a health bar for each car
 void drawHealthBar(int carNo)
 {
 	
+	//declare the shapes for the progress bar and its outline
 	sf::RectangleShape healthBarOutline, healthBar;
 	healthBarOutline.setSize(sf::Vector2f(70, 12));
 	healthBarOutline.setOrigin(35, 32 - car[carNo].sCar.getLocalBounds().height/2);
@@ -472,6 +474,7 @@ void drawHealthBar(int carNo)
 	healthBar.setRotation(car[carNo].angle*180/pi);
 	window.draw(healthBar);
 
+	//write the health for each car
 	sf::Text txtCarHP;
 	txtCarHP.setString(to_string(car[carNo].health) + "/" + to_string(car[carNo].maxHealth));
 	txtCarHP.setFont(font1);
@@ -486,10 +489,14 @@ void drawHealthBar(int carNo)
 
 }
 
+//method that shows the game screen
 void showGameScreen() {
 
+	//booleans that help us to recognise whoch key is the user pressing
+	//the only keys recognised here are the arrow ones
 	bool Up=false,Right=false,Down=false,Left=false;
 
+	//if the arrow key is pressed than we store that info
 	if (Keyboard::isKeyPressed(Keyboard::Up)) Up=true;
 	if (Keyboard::isKeyPressed(Keyboard::Right)) Right=true;
 	if (Keyboard::isKeyPressed(Keyboard::Down)) Down=true;
