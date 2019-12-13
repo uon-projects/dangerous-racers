@@ -49,13 +49,12 @@ float angle=0; //represents the user car angle
 float maxSpeed=15; //represents the maxSpeed for each car
 float turnSpeed=0.05; //represents the turn speed for the cars
 
-sf::Font font1(zfSFML.loadFont("Assets/fonts/", "big_space", "otf"));
+sf::Font font1(zfSFML.loadFont("Assets/fonts/", "big_space", "otf")); //declaring the font that is used by text
+sf::Text inRaceText, inRaceTime, inRaceLap, inRacePlace; //declring all the variables of text type that are used in the game
 
 sf::Clock inGameClock;
 
 bool raceStarted, raceEnded, outOfTrack = false;
-sf::Text inRaceText, inRaceTime, inRaceLap, inRacePlace;
-sf::Vector2i lastPos;
 bool readyToRace = false;
 
 int pLvl1[pointsLvl1][2] = {
