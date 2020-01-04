@@ -308,7 +308,7 @@ struct Car
 	void increaseSpeed()
 	{
 		srand(time(NULL)); //making sure that every time are generated random numbers
-		speed = speed 1- rand()%10/10 * 1.5 + rand()%10/10 * 3;
+		speed = speed - rand()%10/10 * 1.5 + rand()%10/10 * 3;
 	}
 	
 	//method that decrease the car speed
@@ -1320,12 +1320,12 @@ void loadGameAssets() {
 
 int main()
 {
-	//setting the window frame limit - 60
+	//setting the window frame limit to 60
 	window.setFramerateLimit(60);
 
 	//setting the game window icon
 	sf::Image icon;
-	icon.loadFromFile("Assets/zeoflow_logo.png");
+	icon.loadFromFile("Assets/dangerous_racers_icon.png");
 	window.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
 	
 	loadGameAssets(); //loading the assets that are mainly used in the game
