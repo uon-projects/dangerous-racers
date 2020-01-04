@@ -308,7 +308,7 @@ struct Car
 	void increaseSpeed()
 	{
 		srand(time(NULL)); //making sure that every time are generated random numbers
-		speed = speed - rand()%10/10 * 1.5 + rand()%10/10 * 3;
+		speed = speed 1- rand()%10/10 * 1.5 + rand()%10/10 * 3;
 	}
 	
 	//method that decrease the car speed
