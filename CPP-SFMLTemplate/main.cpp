@@ -245,7 +245,7 @@ struct Car
 	int carId; //the card id - must be unique
 	int currentCheckPoint; //the current checkpoint for each car
 	int lap; //current lap for every car
-	int n; //helps to loacte the next target - checkpoint
+	int n; //helps to locate the next target - checkpoint
 	int health; //current health of the car
 	int maxHealth; //max health of the car - depends by the vehicle model
 	Sprite sCar; //the car sprite
