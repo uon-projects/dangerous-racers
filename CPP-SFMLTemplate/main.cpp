@@ -523,11 +523,7 @@ void showGameScreen() {
 	//depending on the keys that the player press we do that action
 	if(outOfTrack && raceStarted && !raceEnded) {
 		if (Up && speed<maxSpeed + rand()%2 + 1) {
-			if (speed < 0) {
-				speed += dec;
-			} else {
-				speed += acc + rand()%3/10;
-			}
+			speed += acc + rand()%3/10;
 		} else {
 			if(speed > 10) {
 				turnSpeed = 0.002;
@@ -571,7 +567,7 @@ void showGameScreen() {
 		if(i != userCar && car[i].health>0) {
 			car[i].move();
 		} else if (i == userCar) {
-			car[i].move();
+			//car[i].move();
 		}
 	}
 	
