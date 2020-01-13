@@ -404,7 +404,7 @@ struct Car
 			if(y>2130) y=2130;
 		}
 		if(userCar != carId) {
-			findTarget();
+			findNextPoint();
 		}
 		checkCheckpoint();
 	}
@@ -413,7 +413,7 @@ struct Car
 	//this method is used for the computer-controlled cars only
 	//and for the user car when the race ends
 	//depending on the race level we have different points that helps us to make the car to move automatically
-	void findTarget()
+	void findNextPoint()
 	{
 		float xPoint, yPoint;
 		if(raceLvl == 1) {
@@ -575,9 +575,9 @@ void showGameScreen() {
 	//in case that the race has ended than the player car drives automatically
 	for(int i=0;i<carsPerLvl[raceLvl - 1];i++){
 		if(raceEnded && car[i].health>0) {
-			car[i].findTarget();
+			car[i].findNextPoint();
 		} else if(i != userCar && car[i].health>0) {
-			car[i].findTarget();
+			car[i].findNextPoint();
 		}
 	}
 
