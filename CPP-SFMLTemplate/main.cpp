@@ -567,7 +567,7 @@ void showGameScreen() {
 		if(i != userCar && car[i].health>0) {
 			car[i].move();
 		} else if (i == userCar) {
-			//car[i].move();
+			car[i].move();
 		}
 	}
 	
