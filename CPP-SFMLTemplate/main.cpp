@@ -415,24 +415,24 @@ struct Car
 	//depending on the race level we have different points that helps us to make the car to move automatically
 	void findTarget()
 	{
-		float tx, ty;
+		float xPoint, yPoint;
 		if(raceLvl == 1) {
-			tx=pLvl1[n][0];
-			ty=pLvl1[n][1];
+			xPoint=pLvl1[n][0];
+			yPoint=pLvl1[n][1];
 		} else if(raceLvl == 2) {
-			tx=pLvl2[n][0];
-			ty=pLvl2[n][1];
+			xPoint=pLvl2[n][0];
+			yPoint=pLvl2[n][1];
 		} else if(raceLvl == 3) {
-			tx=pLvl3[n][0];
-			ty=pLvl3[n][1];
+			xPoint=pLvl3[n][0];
+			yPoint=pLvl3[n][1];
 		}
 
-		float beta = angle-atan2(tx-x,-ty+y);
+		float betaAngle = angle-atan2(xPoint-x,-yPoint+y);
 
-		if (sin(beta)<0) angle+=0.005*speed;
+		if (sin(betaAngle)<0) angle+=0.005*speed;
 		else angle-=0.005*speed;
 
-		if ((x-tx)*(x-tx)+(y-ty)*(y-ty)<25*25) n=(n+1)%pointsPerLvl;
+		if ((x-xPoint)*(x-xPoint)+(y-yPoint)*(y-yPoint)<25*25) n=(n+1)%pointsPerLvl;
 	}
 };
 
