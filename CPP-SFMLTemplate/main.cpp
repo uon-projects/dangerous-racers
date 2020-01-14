@@ -432,7 +432,7 @@ struct Car
 		if (sin(betaAngle)<0) angle+=0.005*speed;
 		else angle-=0.005*speed;
 
-		if ((x-xPoint)*(x-xPoint)+(y-yPoint)*(y-yPoint)<25*25) n=(n+1)%pointsPerLvl;
+		if ((x-xPoint)*(x-xPoint)+(y-yPoint)*(y-yPoint)<50*50) n=(n+1)%pointsPerLvl;
 	}
 };
 
