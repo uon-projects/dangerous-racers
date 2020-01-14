@@ -710,7 +710,7 @@ void showGameScreen() {
 		car[i].sCar.setPosition(car[i].x-offsetX,car[i].y-offsetY);
 		car[i].sCar.setRotation(car[i].angle*180/pi);
 		window.draw(car[i].sCar);
-		if(car[i].health < 0) {
+		if(car[i].health <= 0) {
 			car[i].crashedMask.setPosition(car[i].x-offsetX,car[i].y-offsetY);
 			car[i].crashedMask.setRotation(car[i].angle*180/pi);
 			window.draw(car[i].crashedMask);
@@ -733,7 +733,7 @@ void showGameScreen() {
 	//we are getting the player place
 	int userPlace = 1;
 	for(int i=0; i<carsPerLvl[raceLvl - 1]; i++) {
-		if(car[i].totalCheckPoints() > car[userCar].totalCheckPoints() && car[i].health > 0) {
+		if(car[i].totalCheckPoints() > car[userCar].totalCheckPoints() && car[i].health >= 0) {
 			userPlace++;
 		}
 	}
@@ -868,7 +868,7 @@ void showGameScreen() {
 			}
 		}
 
-		inRaceLap.setString("Lap: " + lap + "/" + to_string(lapsPerLvl[raceLvl - 1] - carsDestroyed));
+		inRaceLap.setString("Lap: " + lap + "/" + to_string(lapsPerLvl[raceLvl - 1]));
 		inRaceLap.setFont(font1);
 		inRaceLap.setCharacterSize(30);
 		inRaceLap.setOutlineColor(sf::Color::Black);
@@ -889,7 +889,7 @@ void showGameScreen() {
 		inRaceTime.setPosition(20, 40);
 		window.draw(inRaceTime);
 
-		inRacePlace.setString("Place: " + to_string(userPlace) + "/" + to_string(carsPerLvl[raceLvl - 1]));
+		inRacePlace.setString("Place: " + to_string(userPlace) + "/" + to_string(carsPerLvl[raceLvl - 1] - carsDestroyed));
 		inRacePlace.setFont(font1);
 		inRacePlace.setCharacterSize(30);
 		inRacePlace.setOutlineColor(sf::Color::Black);
