@@ -733,7 +733,7 @@ void showGameScreen() {
 	//we are getting the player place
 	int userPlace = 1;
 	for(int i=0; i<carsPerLvl[raceLvl - 1]; i++) {
-		if(car[i].totalCheckPoints() > car[userCar].totalCheckPoints()) {
+		if(car[i].totalCheckPoints() > car[userCar].totalCheckPoints() && car[i].health > 0) {
 			userPlace++;
 		}
 	}
@@ -854,7 +854,7 @@ void showGameScreen() {
 		
 		int carsDestroyed = 0;
 		for(int i=0; i<carsPerLvl[raceLvl - 1] - 1; i++) {
-			if(car[i].health < 0) {
+			if(car[i].health <= 0) {
 				carsDestroyed++;
 			}
 		}
@@ -868,7 +868,7 @@ void showGameScreen() {
 			}
 		}
 
-		inRaceLap.setString("Lap: " + lap + "/" + to_string(lapsPerLvl[raceLvl - 1]));
+		inRaceLap.setString("Lap: " + lap + "/" + to_string(lapsPerLvl[raceLvl - 1] - carsDestroyed));
 		inRaceLap.setFont(font1);
 		inRaceLap.setCharacterSize(30);
 		inRaceLap.setOutlineColor(sf::Color::Black);
