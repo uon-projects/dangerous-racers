@@ -510,7 +510,7 @@ list<PowerUps> powerUps;
 int generateRandomBubble()
 {
 	srand(time(NULL)); //making sure that every time are generated random numbers
-	return rand() % 3;
+	return rand() % 4;
 }
 
 void createNewPowerUp()
@@ -555,7 +555,8 @@ void checkPowerUpTaken()
 	if(car[userCar].x >= powerUps.front().posX - radiusPos && car[userCar].x <= powerUps.front().posX + radiusPos
 		&& car[userCar].y >= powerUps.front().posY - radiusPos && car[userCar].y <= powerUps.front().posY + radiusPos)
 	{
-		powerUps.empty();
+		powerUps.pop_front();
+		createNewPowerUp();
 	}
 }
 
@@ -1615,6 +1616,9 @@ void loadGameAssets()
 	Sprite explosionIcon = zfSFML.loadSpriteFromTexture("Assets/", "icon_explosion", "png");
 	explosionIcon.setScale(0.3, 0.3);
 	inGameBubbles[2] = explosionIcon;
+	Sprite reverseIcon = zfSFML.loadSpriteFromTexture("Assets/", "icon_reverse", "png");
+	reverseIcon.setScale(0.3, 0.3);
+	inGameBubbles[3] = reverseIcon;
 
 }
 
