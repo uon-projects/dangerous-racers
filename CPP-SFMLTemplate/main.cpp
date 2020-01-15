@@ -5,6 +5,7 @@
 #include "ZeoFlow_SFML.h"
 #include "MD2.h"
 #include "Collision.hpp"
+#include <list>
 
 //Compiler Directives
 using namespace std;
@@ -60,7 +61,9 @@ bool outOfTrack = false; //let us know if the user car has exited the racetrack
 //clock variables that makes the game more realistic
 sf::Clock inGameClock;
 
-Sprite inGameBubbles[3]; //holds the in game action sprites
+Sprite inGameBubbles[4]; //holds the in game action sprites
+bool powerUpReverse = false;
+bool powerUpNitro = false;
 
 //array that stores the points for the 1st racetrack
 int pLvl1[pointsLvl1][2] = {
@@ -483,23 +486,120 @@ struct CarModels
 	}
 };
 
+struct PowerUps
+{
+	float posX, posY;
+	int type;
+
+	void initialise(float nPosX, float nPosY, int nType) {
+		posX = nPosX;
+		posY = nPosY;
+		type = nType;
+	}
+
+};
+
 //declaring the arrays that stores items that are of struct data type
 TracksBackground tracksBackground[3];
 TracksBackground tracksBackgroundMask[3];
 TrackObjects trackObjects[2];
 CarModels carModels[3];
 Car car[8];
+list<PowerUps> powerUps;
 
 //method that retrives a random number
 //this method helps us to pick up a new random in game bubble
 int generateRandomBubble()
 {
 	srand(time(NULL)); //making sure that every time are generated random numbers
-	return rand() % 3;
+	return rand() % 4;
 }
 
-void getPowerUpsByBubble(int no)
+void createNewPowerUp()
 {
+	int powerUpType = generateRandomBubble();
+	PowerUps powerUp;
+	Vector2f point;
+	srand(time(NULL)); //making sure that every time are generated random numbers
+	switch(raceLvl) {
+	  case 1:
+		  {
+			  int pointRow = rand() % pointsLvl1;
+			  point.x = pLvl1[pointRow][0];
+			  point.y = pLvl1[pointRow][1];
+		  }
+		break;
+	  case 2:
+		  {
+			  int pointRow = rand() % pointsLvl2;
+			  point.x = pLvl2[pointRow][0];
+			  point.y = pLvl2[pointRow][1];
+		  }
+		break;
+	  case 3:
+		  {
+			  int pointRow = rand() % pointsLvl3;
+			  point.x = pLvl3[pointRow][0];
+			  point.y = pLvl3[pointRow][1];
+		  }
+		break;
+	  default:
+		  break;
+	}
+	powerUp.initialise(point.x, point.y, powerUpType);
+	powerUps.push_front(powerUp);
+
+}
+
+void checkPowerUpTaken(int carId)
+{
+	int radiusPos = 100;
+	if(car[carId].x >= powerUps.front().posX - radiusPos && car[carId].x <= powerUps.front().posX + radiusPos
+		&& car[carId].y >= powerUps.front().posY - radiusPos && car[carId].y <= powerUps.front().posY + radiusPos)
+	{
+		if(carId == userCar)
+		{
+			if(powerUps.front().type == 3)
+			{
+				//reverse
+				powerUpReverse = !powerUpReverse;
+			}
+			else if(powerUps.front().type == 1)
+			{
+				//nitro
+				powerUpNitro = true;
+			}
+		}
+		if(powerUps.front().type == 2)
+		{
+			//explosion
+			car[carId].health -= 50;
+			if(car[carId].health <0)
+			{
+				car[carId].health = 0;
+			}
+			else if(car[carId].health<100)
+			{
+				car[carId].health += 50;
+			}
+		}
+		else if(powerUps.front().type == 0)
+		{
+			//health
+			car[carId].health += 25;
+			if(car[carId].health > car[carId].maxHealth)
+			{
+				car[carId].health = car[carId].maxHealth;
+			}
+		}
+		else if(powerUps.front().type == 1)
+		{
+			//nitro
+			powerUpNitro = false;
+		}
+		powerUps.pop_front();
+		createNewPowerUp();
+	}
 }
 
 //method that draws a health bar for each car
@@ -544,7 +644,7 @@ void showGameScreen()
 
 	//booleans that help us to recognise whoch key is the user pressing
 	//the only keys recognised here are the arrow ones
-	bool Up=false,Right=false,Down=false,Left=false;
+	bool Up=false, Right=false, Down=false, Left=false;
 
 	//if the arrow key is pressed than we store that info
 	if (Keyboard::isKeyPressed(Keyboard::Up)) Up=true;
@@ -600,6 +700,10 @@ void showGameScreen()
 	} 
 	else
 	{
+		if(powerUpNitro)
+		{
+			maxSpeed +=2;
+		}
 		if (Up && speed<maxSpeed + rand()%2 + 2 && raceStarted)
 		{
 			if (speed < 0)
@@ -611,19 +715,49 @@ void showGameScreen()
 				speed += acc + rand()%3/10;
 			}
 		}
+		if(powerUpNitro)
+		{
+			maxSpeed -=2;
+		}
 	}
 
-	if (Down && speed>-maxSpeed && raceStarted)
-		if (speed > 0) speed -= dec * 2;
-		else  speed -= acc;
+	if (Down && car[userCar].speed>-maxSpeed/2 && raceStarted)
+	{
+		if (speed > 0)
+		{
+			speed -= dec * 2;
+		}
+		else
+		{
+			speed -= acc;
+		}
+	}
 
 	if (!Up && !Down)
-		if (speed - dec > 0) speed -= dec;
-		else if (speed + dec < 0) speed += dec;
-		else speed = 0;
-
-	if (Right && speed!=0) angle += turnSpeed * speed/maxSpeed;
-	if (Left && speed!=0) angle -= turnSpeed * speed/maxSpeed;
+	{
+		if (speed - dec > 0)
+		{
+			speed -= dec;
+		}
+		else if (speed + dec < 0)
+		{
+			speed += dec;
+		}
+		else
+		{
+			speed = 0;
+		}
+	}
+	if(powerUpReverse)
+	{
+		if (Left && speed!=0) angle += turnSpeed * speed/maxSpeed;
+		if (Right && speed!=0) angle -= turnSpeed * speed/maxSpeed;
+	}
+	else
+	{
+		if (Right && speed!=0) angle += turnSpeed * speed/maxSpeed;
+		if (Left && speed!=0) angle -= turnSpeed * speed/maxSpeed;
+	}
 
 	if(!raceEnded)
 	{
@@ -677,7 +811,11 @@ void showGameScreen()
 				}
 				if(i != userCar && j == userCar && !raceEnded)
 				{
-					car[i].health= car[i].health - 1.5 * car[userCar].speed;
+					if(car[j].speed > 0 && car[i].speed > 0)
+					{
+						car[i].health= car[i].health - 1.5 * car[j].speed;
+						car[j].health= car[j].health - 0.5 * car[i].speed;
+					}
 				}
 			}
 		}
@@ -782,6 +920,14 @@ void showGameScreen()
 	{
 		outOfTrack = false;
 	}
+	
+	for(int i=0; i<carsPerLvl[raceLvl - 1]; i++)
+	{
+		checkPowerUpTaken(i);
+	}
+
+	inGameBubbles[powerUps.front().type].setPosition(powerUps.front().posX -offsetX, powerUps.front().posY -offsetY);
+	window.draw(inGameBubbles[powerUps.front().type]);
 
 	//declaring the square that shows us where the checkpoints are
 	sf::RectangleShape menuSqr;
@@ -833,7 +979,7 @@ void showGameScreen()
 			car[i].crashedMask.setRotation(car[i].angle*180/pi);
 			window.draw(car[i].crashedMask);
 		}
-		if(raceStarted && !raceEnded && i != userCar && car[i].health > 0)
+		if(raceStarted && !raceEnded && car[i].health > 0)
 		{
 			drawHealthBar(i);
 		}
@@ -1404,6 +1550,7 @@ void selectLvl(int lvl, int points, int cp)
 			car[i].angle = angle;
 		}
 	}
+	createNewPowerUp();
 }
 
 //method that draw the screen where we can select the levels
@@ -1518,14 +1665,17 @@ void loadGameAssets()
 	carModels[2].carSprite = sCar3;
 	
 	Sprite healthIcon = zfSFML.loadSpriteFromTexture("Assets/", "icon_health", "png");
-	healthIcon.setScale(0.2, 0.2);
+	healthIcon.setScale(0.3, 0.3);
 	inGameBubbles[0] = healthIcon;
 	Sprite nitroIcon = zfSFML.loadSpriteFromTexture("Assets/", "icon_nitro", "png");
-	nitroIcon.setScale(0.2, 0.2);
+	nitroIcon.setScale(0.3, 0.3);
 	inGameBubbles[1] = nitroIcon;
 	Sprite explosionIcon = zfSFML.loadSpriteFromTexture("Assets/", "icon_explosion", "png");
-	explosionIcon.setScale(0.2, 0.2);
+	explosionIcon.setScale(0.3, 0.3);
 	inGameBubbles[2] = explosionIcon;
+	Sprite reverseIcon = zfSFML.loadSpriteFromTexture("Assets/", "icon_reverse", "png");
+	reverseIcon.setScale(0.3, 0.3);
+	inGameBubbles[3] = reverseIcon;
 
 }
 
