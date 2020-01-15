@@ -61,7 +61,9 @@ bool outOfTrack = false; //let us know if the user car has exited the racetrack
 //clock variables that makes the game more realistic
 sf::Clock inGameClock;
 
-Sprite inGameBubbles[3]; //holds the in game action sprites
+Sprite inGameBubbles[4]; //holds the in game action sprites
+bool powerUpReverse = false;
+bool powerUpNitro = false;
 
 //array that stores the points for the 1st racetrack
 int pLvl1[pointsLvl1][2] = {
@@ -549,12 +551,52 @@ void createNewPowerUp()
 
 }
 
-void checkPowerUpTaken()
+void checkPowerUpTaken(int carId)
 {
-	int radiusPos = 50;
-	if(car[userCar].x >= powerUps.front().posX - radiusPos && car[userCar].x <= powerUps.front().posX + radiusPos
-		&& car[userCar].y >= powerUps.front().posY - radiusPos && car[userCar].y <= powerUps.front().posY + radiusPos)
+	int radiusPos = 100;
+	if(car[carId].x >= powerUps.front().posX - radiusPos && car[carId].x <= powerUps.front().posX + radiusPos
+		&& car[carId].y >= powerUps.front().posY - radiusPos && car[carId].y <= powerUps.front().posY + radiusPos)
 	{
+		if(carId == userCar)
+		{
+			if(powerUps.front().type == 3)
+			{
+				//reverse
+				powerUpReverse = !powerUpReverse;
+			}
+			else if(powerUps.front().type == 1)
+			{
+				//nitro
+				powerUpNitro = true;
+			}
+		}
+		if(powerUps.front().type == 2)
+		{
+			//explosion
+			car[carId].health -= 50;
+			if(car[carId].health <0)
+			{
+				car[carId].health = 0;
+			}
+			else if(car[carId].health<100)
+			{
+				car[carId].health += 50;
+			}
+		}
+		else if(powerUps.front().type == 0)
+		{
+			//health
+			car[carId].health += 25;
+			if(car[carId].health > car[carId].maxHealth)
+			{
+				car[carId].health = car[carId].maxHealth;
+			}
+		}
+		else if(powerUps.front().type == 1)
+		{
+			//nitro
+			powerUpNitro = false;
+		}
 		powerUps.pop_front();
 		createNewPowerUp();
 	}
@@ -658,6 +700,10 @@ void showGameScreen()
 	} 
 	else
 	{
+		if(powerUpNitro)
+		{
+			maxSpeed +=2;
+		}
 		if (Up && speed<maxSpeed + rand()%2 + 2 && raceStarted)
 		{
 			if (speed < 0)
@@ -668,6 +714,10 @@ void showGameScreen()
 			{
 				speed += acc + rand()%3/10;
 			}
+		}
+		if(powerUpNitro)
+		{
+			maxSpeed -=2;
 		}
 	}
 
@@ -698,9 +748,16 @@ void showGameScreen()
 			speed = 0;
 		}
 	}
-
-	if (Right && speed!=0) angle += turnSpeed * speed/maxSpeed;
-	if (Left && speed!=0) angle -= turnSpeed * speed/maxSpeed;
+	if(powerUpReverse)
+	{
+		if (Left && speed!=0) angle += turnSpeed * speed/maxSpeed;
+		if (Right && speed!=0) angle -= turnSpeed * speed/maxSpeed;
+	}
+	else
+	{
+		if (Right && speed!=0) angle += turnSpeed * speed/maxSpeed;
+		if (Left && speed!=0) angle -= turnSpeed * speed/maxSpeed;
+	}
 
 	if(!raceEnded)
 	{
@@ -777,11 +834,6 @@ void showGameScreen()
 				car[userCar].y+=dy*car[userCar].speed/50.0;
 			}
 		}
-	}
-
-	if(powerUps.size() != 0)
-	{
-		checkPowerUpTaken();
 	}
 
 	//if the race has started than we increase the automated-cars speed regularly (until it reaches the maximum speed)
@@ -867,6 +919,11 @@ void showGameScreen()
 	else
 	{
 		outOfTrack = false;
+	}
+	
+	for(int i=0; i<carsPerLvl[raceLvl - 1]; i++)
+	{
+		checkPowerUpTaken(i);
 	}
 
 	inGameBubbles[powerUps.front().type].setPosition(powerUps.front().posX -offsetX, powerUps.front().posY -offsetY);
