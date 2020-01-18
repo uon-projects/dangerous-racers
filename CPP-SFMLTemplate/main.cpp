@@ -515,6 +515,7 @@ int generateRandomBubble()
 	return rand() % 4;
 }
 
+//this method is used for creating a new power-up
 void createNewPowerUp()
 {
 	int powerUpType = generateRandomBubble();
@@ -551,6 +552,7 @@ void createNewPowerUp()
 
 }
 
+//method used for checking if a car overlaps with the power-up
 void checkPowerUpTaken(int carId)
 {
 	int radiusPos = 100;
