@@ -1,0 +1,18 @@
+Instructions:
+- to drive to right press the right key, to drive to left press the left key;
+- to accelerate press the top arrow key;
+- to break or drive backwards press the bottom arrow key;
+
+Rules:
+- you need to finish the race on the first place in order to unlock new racetraks and new vehicles;
+- if you keep crashing in the same car then its health will decreased and when it reaches 0 that car will
+be destroyed;
+- if all the cars are destroyed you win by default;
+- even if you can drive outside the track if you miss the checkpoint that lap will not be marked as a
+complete one;
+
+Useful in-game features:
+- you can use the mini-map (top right corner) in order to view you car on the racetrack (the green square)
+and the other cars (the black squares);
+- on the top left corner you also can see your place, the race time and your lap;
+- the checkpoints are marked near the racetrack as yellow squares;
